@@ -14,8 +14,8 @@
     body {
       margin: 0;
       background: #f4f6f8;
-      color: #333333;
-      padding-top: 70px; /* supaya konten tidak ketutup navbar */
+      color: #333;
+      padding-top: 70px;
     }
 
     /* ===== NAVBAR PUTIH ===== */
@@ -47,11 +47,16 @@
 
     /* ===== HERO ===== */
     .hero {
-      background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+      background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
                   url('https://via.placeholder.com/1200x400') center/cover;
       color: white;
-      padding: 80px 40px;
+      padding: 90px 40px;
       text-align: center;
+    }
+
+    .hero-logo {
+      width: 90px;
+      margin-bottom: 20px;
     }
 
     .hero h2 {
@@ -110,12 +115,12 @@
     .info {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
+      gap: 20px;
     }
 
     .info-card {
       background: white;
-      padding: 25px;
+      padding: 20px;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
@@ -133,7 +138,7 @@
 
 <body>
 
-  <!-- NAVBAR PUTIH -->
+  <!-- NAVBAR -->
   <div class="navbar">
     <a href="index.html">Beranda</a>
     <a href="kecamatan.html">Peta Kecamatan</a>
@@ -143,11 +148,14 @@
 
   <!-- HERO -->
   <div class="hero">
-    <h2>Sistem Informasi Geografis Kecamatan</h2>
+    <img src="img/logo-kecamatan.png" alt="Logo Kecamatan" class="hero-logo">
+
+    <h2>Selamat Datang di Web GIS Kecamatan Karanglewas</h2>
     <p>
       Menyajikan data spasial dan informasi wilayah kecamatan
       untuk mendukung perencanaan dan pelayanan publik.
     </p>
+
     <a href="kecamatan.html" style="text-decoration:none;">
       <button>Lihat Peta</button>
     </a>
@@ -189,31 +197,22 @@
     <div class="info">
       <div class="info-card">
         <h3>Administrasi Wilayah</h3>
-        <p>
-          Kecamatan ini terdiri dari beberapa desa/kelurahan
-          dengan batas wilayah administratif yang jelas.
-        </p>
+        <p>Kecamatan ini terdiri dari beberapa desa dengan batas wilayah administratif yang jelas.</p>
       </div>
       <div class="info-card">
         <h3>Fasilitas Umum</h3>
-        <p>
-          Terdapat sekolah, puskesmas, kantor desa, dan fasilitas
-          publik lainnya yang dapat dilihat pada peta.
-        </p>
+        <p>Terdapat sekolah, puskesmas, kantor desa, dan fasilitas publik lainnya yang dapat dilihat pada peta.</p>
       </div>
       <div class="info-card">
         <h3>Sumber Data</h3>
-        <p>
-          Data bersumber dari BPS, BIG, dan OpenStreetMap
-          yang diperbarui secara berkala.
-        </p>
+        <p>Data bersumber dari BPS, BIG, dan OpenStreetMap yang diperbarui secara berkala.</p>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <p>© 2025 Web GIS Kecamatan | Dikembangkan untuk kebutuhan informasi wilayah</p>
+    <p>© 2025 Web GIS Kecamatan | Dikembangkan untuk kebutuhan akademik</p>
   </footer>
 
 </body>
