@@ -1,0 +1,106 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #e6f2ff;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 15px;
+  background: #ffffff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.navbar a {
+  text-decoration: none;
+  font-weight: bold;
+  color: #003b73;
+}
+
+.navbar a.active {
+  color: #ff9800;
+}
+
+/* ===== KONTEN ===== */
+.content {
+  padding-top: 100px;
+  text-align: center;
+}
+
+/* ===== PETA ===== */
+#map {
+  width: 95%;
+  height: 500px;
+  margin: 20px auto;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+/* Leaflet tidak menutupi navbar */
+.leaflet-container {
+  z-index: 1;
+}
+
+/* ===== BERANDA ===== */
+.hero {
+  margin-top: 120px;   /* aman karena navbar fixed */
+  text-align: center;
+}
+
+.hero img {
+  width: 150px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.hero h1 {
+  margin: 5px 0;
+  color: #003b73;
+}
+
+.hero p {
+  color: #482121;
+  font-size: 16px;
+}
+
+/* ===== INFORMASI & LAYANAN ===== */
+.info-layanan {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 40px auto;
+  width: 90%;
+  flex-wrap: wrap; /* biar aman di layar kecil */
+}
+
+.box {
+  background: #ffffff;
+  width: 45%;
+  min-width: 280px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.box h3 {
+  color: #003b73;
+  border-bottom: 2px solid #ff9800;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.box ul {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.box ul li {
+  margin-bottom: 8px;
+}

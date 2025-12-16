@@ -1,0 +1,1 @@
+var json_Rumahkepaladesa_5 = {"type":"FeatureCollection","name":"Rumahkepaladesa_5","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"id":"1","Namakades":"Bapak Isro"},"geometry":{"type":"Point","coordinates":[109.180715614773177,-7.393618188403149]}}]}

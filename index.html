@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web GIS Kecamatan</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f6f8;
+      color: #333333;
+      padding-top: 70px; /* supaya konten tidak ketutup navbar */
+    }
+
+    /* ===== NAVBAR PUTIH ===== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 70px;
+      background: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      z-index: 9999;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #003b73;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .navbar a:hover {
+      color: #ff9800;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                  url('https://via.placeholder.com/1200x400') center/cover;
+      color: white;
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .hero button {
+      margin-top: 25px;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      background: #f6c90e;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    /* ===== SECTION ===== */
+    section {
+      padding: 50px 40px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    /* ===== STATISTIK ===== */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .stat-card h3 {
+      margin: 10px 0;
+      font-size: 28px;
+      color: #1f6f8b;
+    }
+
+    /* ===== INFORMASI ===== */
+    .info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .info-card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #1f6f8b;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR PUTIH -->
+  <div class="navbar">
+    <a href="index.html">Beranda</a>
+    <a href="kecamatan.html">Peta Kecamatan</a>
+    <a href="desa.html">Peta Desa</a>
+    <a href="tentang.html">Tentang</a>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h2>Sistem Informasi Geografis Kecamatan</h2>
+    <p>
+      Menyajikan data spasial dan informasi wilayah kecamatan
+      untuk mendukung perencanaan dan pelayanan publik.
+    </p>
+    <a href="kecamatan.html" style="text-decoration:none;">
+      <button>Lihat Peta</button>
+    </a>
+  </div>
+
+  <!-- STATISTIK -->
+  <section>
+    <div class="section-title">
+      <h2>Statistik Wilayah</h2>
+      <p>Data singkat wilayah kecamatan</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <p>Jumlah Penduduk</p>
+        <h3>69.197 jiwa</h3>
+      </div>
+      <div class="stat-card">
+        <p>Luas Wilayah</p>
+        <h3>32,48 km²</h3>
+      </div>
+      <div class="stat-card">
+        <p>Jumlah Desa</p>
+        <h3>13</h3>
+      </div>
+      <div class="stat-card">
+        <p>Jumlah RW</p>
+        <h3>81</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- INFORMASI -->
+  <section>
+    <div class="section-title">
+      <h2>Informasi Kecamatan</h2>
+    </div>
+
+    <div class="info">
+      <div class="info-card">
+        <h3>Administrasi Wilayah</h3>
+        <p>
+          Kecamatan ini terdiri dari beberapa desa/kelurahan
+          dengan batas wilayah administratif yang jelas.
+        </p>
+      </div>
+      <div class="info-card">
+        <h3>Fasilitas Umum</h3>
+        <p>
+          Terdapat sekolah, puskesmas, kantor desa, dan fasilitas
+          publik lainnya yang dapat dilihat pada peta.
+        </p>
+      </div>
+      <div class="info-card">
+        <h3>Sumber Data</h3>
+        <p>
+          Data bersumber dari BPS, BIG, dan OpenStreetMap
+          yang diperbarui secara berkala.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Web GIS Kecamatan | Dikembangkan untuk kebutuhan informasi wilayah</p>
+  </footer>
+
+</body>
+</html>
