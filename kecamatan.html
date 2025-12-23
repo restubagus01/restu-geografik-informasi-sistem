@@ -13,84 +13,37 @@
         <link rel="stylesheet" href="css/fontawesome-all.min.css">
         <link rel="stylesheet" href="css/leaflet-search.css">
         <link rel="stylesheet" href="css/leaflet.photon.css">
+         <link rel="stylesheet" href="css/style.css">
         <style>
-       /* ===== NAVBAR FIX QGIS (FINAL) ===== */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 40px;
-  z-index: 99999;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-
-  /* PAKSA FONT */
-  font-family: Arial, Helvetica, sans-serif !important;
-}
-
-/* ===== LINK NAVBAR (SEMUA STATE) ===== */
-.navbar a,
-.navbar a:link,
-.navbar a:visited,
-.navbar a:hover,
-.navbar a:active {
-  color: #003b73 !important;
-  text-decoration: none !important;
-  font-weight: 600 !important;
-  font-size: 16px !important;
-
-  /* PAKSA FONT (INI YANG KURANG SEBELUMNYA) */
-  font-family: Arial, Helvetica, sans-serif !important;
-}
-
-/* ===== MENU AKTIF ===== */
-.navbar a.active {
-  color: #ff9800 !important;
-}
-
-/* ===== OFFSET MAP ===== */
-#map {
-  height: calc(100vh - 70px);
-  margin-top: 70px;
-}
-</style>
-
-</style>
-
-
-
-     <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-    }
-
-    #map {
-      height: calc(100vh - 70px);
-      margin-top: 70px;
-    }
-
-      </style>
-
-  <title>Peta Kecamatan</title>
-
        
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+</style>
+
+        </style>
+        <title></title>
     </head>
     <body>
-  <div class="navbar">
-    <a href="../index.html">Beranda</a>
-    <a href="../kecamatan.html" class="active">Peta Kecamatan</a>
-    <a href="../desa.html">Peta Desa</a>
-    <a href="../tentang.html">Tentang</a>
-  </div>
+        <header class="navbar">
+    <div class="container nav-content">
+        <div class="logo-area">
+            <img src="img/logo-kecamatan.png" alt="Logo Kecamatan">
+            <span>Web GIS Kecamatan</span>
+        </div>
 
-  <div id="map">
-
+        <nav>
+            <a href="index.html" >Beranda</a>
+             <a href="kecamatan.html" class="active">Peta Kecamatan</a>
+            <a href="desa.html">Peta Desa</a>
+            <a href="tentang.html">Tentang</a>
+        </nav>
+    </div>
+</header>
+        <div id="map">
         </div>
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
@@ -116,9 +69,24 @@
         <script src="data/desa_9.js"></script>
         <script src="data/Desa_10.js"></script>
         <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString' || e.target.feature.geometry.type === 'MultiLineString') {
+              highlightLayer.setStyle({
+                color: 'rgba(255, 255, 0, 1.00)',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: 'rgba(255, 255, 0, 1.00)',
+                fillOpacity: 1
+              });
+            }
+        }
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[-7.518179131504566,109.04272961313008],[-7.310199505788242,109.3190335170765]]);
+        }).fitBounds([[-7.4724024307795265,109.08580911508426],[-7.295198451548049,109.32121088236195]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -213,6 +181,16 @@
         layer_GoogleTerrainHybrid_1;
         map.addLayer(layer_GoogleTerrainHybrid_1);
         function pop_karanglewas_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -268,6 +246,16 @@
         bounds_group.addLayer(layer_karanglewas_2);
         map.addLayer(layer_karanglewas_2);
         function pop_Balaidesa_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -296,7 +284,7 @@
         rotationOrigin: 'center center',
         icon: L.icon({
             iconUrl: 'markers/Balaidesa_3.svg',
-            iconSize: [19.0, 19.0]
+            iconSize: [9.879999999999999, 9.879999999999999]
         }),
                 interactive: true,
             }
@@ -322,6 +310,16 @@
         bounds_group.addLayer(layer_Balaidesa_3);
         map.addLayer(layer_Balaidesa_3);
         function pop_Jalanutama_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -368,6 +366,16 @@
         bounds_group.addLayer(layer_Jalanutama_4);
         map.addLayer(layer_Jalanutama_4);
         function pop_jalandesaa_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -414,6 +422,16 @@
         bounds_group.addLayer(layer_jalandesaa_5);
         map.addLayer(layer_jalandesaa_5);
         function pop_sungai_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -457,6 +475,16 @@
         bounds_group.addLayer(layer_sungai_6);
         map.addLayer(layer_sungai_6);
         function pop_relkereta_7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -519,6 +547,16 @@
         bounds_group.addLayer(layer_relkereta_7);
         map.addLayer(layer_relkereta_7);
         function pop_jalankec_8(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -649,24 +687,32 @@
         bounds_group.addLayer(layer_jalankec_8);
         map.addLayer(layer_jalankec_8);
         function pop_desa_9(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Nama</th>\
+                        <td>' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">JmlRT</th>\
+                        <td>' + (feature.properties['JmlRT'] !== null ? autolinker.link(String(feature.properties['JmlRT']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['JmlRT'] !== null ? autolinker.link(String(feature.properties['JmlRT']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">jmlRW</th>\
+                        <td>' + (feature.properties['jmlRW'] !== null ? autolinker.link(String(feature.properties['jmlRW']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['jmlRW'] !== null ? autolinker.link(String(feature.properties['jmlRW']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['penduduk'] !== null ? autolinker.link(String(feature.properties['penduduk']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Luas</th>\
+                        <td>' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -680,14 +726,14 @@
             return {
                 pane: 'pane_desa_9',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(128,62,0,0.436)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(9,225,250,0.454)',
+                fillColor: 'rgba(255,127,0,0.436)',
                 interactive: true,
             }
         }
@@ -706,21 +752,32 @@
         bounds_group.addLayer(layer_desa_9);
         map.addLayer(layer_desa_9);
         function pop_Desa_10(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Nama</th>\
+                        <td>' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Jmh Rt</th>\
+                        <td>' + (feature.properties['Jmh Rt'] !== null ? autolinker.link(String(feature.properties['Jmh Rt']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Jmh Rt'] !== null ? autolinker.link(String(feature.properties['Jmh Rt']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Jmh Rw</th>\
+                        <td>' + (feature.properties['Jmh Rw'] !== null ? autolinker.link(String(feature.properties['Jmh Rw']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Jmh Rw'] !== null ? autolinker.link(String(feature.properties['Jmh Rw']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Luas</th>\
+                        <td>' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -736,14 +793,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(42,121,217,0.454)',
+                fillColor: 'rgba(42,121,217,0.434)',
                 interactive: true,
             }
                     break;
@@ -751,14 +808,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(149,217,48,0.454)',
+                fillColor: 'rgba(149,217,48,0.434)',
                 interactive: true,
             }
                     break;
@@ -766,14 +823,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(181,31,211,0.454)',
+                fillColor: 'rgba(181,31,211,0.434)',
                 interactive: true,
             }
                     break;
@@ -781,14 +838,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(44,200,151,0.454)',
+                fillColor: 'rgba(44,200,151,0.434)',
                 interactive: true,
             }
                     break;
@@ -796,14 +853,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(50,53,206,0.454)',
+                fillColor: 'rgba(50,53,206,0.434)',
                 interactive: true,
             }
                     break;
@@ -811,14 +868,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(73,215,108,0.454)',
+                fillColor: 'rgba(73,215,108,0.434)',
                 interactive: true,
             }
                     break;
@@ -826,14 +883,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(65,221,34,0.454)',
+                fillColor: 'rgba(65,221,34,0.434)',
                 interactive: true,
             }
                     break;
@@ -841,14 +898,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(205,64,167,0.454)',
+                fillColor: 'rgba(205,64,167,0.434)',
                 interactive: true,
             }
                     break;
@@ -856,14 +913,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(225,59,109,0.454)',
+                fillColor: 'rgba(225,59,109,0.434)',
                 interactive: true,
             }
                     break;
@@ -871,14 +928,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(119,193,203,0.454)',
+                fillColor: 'rgba(119,193,203,0.434)',
                 interactive: true,
             }
                     break;
@@ -886,14 +943,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(217,114,100,0.454)',
+                fillColor: 'rgba(217,114,100,0.434)',
                 interactive: true,
             }
                     break;
@@ -901,14 +958,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(111,37,215,0.454)',
+                fillColor: 'rgba(111,37,215,0.434)',
                 interactive: true,
             }
                     break;
@@ -916,14 +973,14 @@
                     return {
                 pane: 'pane_Desa_10',
                 opacity: 1,
-                color: 'rgba(247,225,55,0.454)',
+                color: 'rgba(56,128,54,0.434)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(209,206,114,0.454)',
+                fillColor: 'rgba(209,206,114,0.434)',
                 interactive: true,
             }
                     break;
@@ -944,9 +1001,9 @@
         bounds_group.addLayer(layer_Desa_10);
         map.addLayer(layer_Desa_10);
         map.on("zoomend", function(e) {
-            if (map.getZoom() <= 18 && map.getZoom() >= 12) {
+            if (map.getZoom() <= 19 && map.getZoom() >= 12) {
                 map.addLayer(layer_Balaidesa_3);
-            } else if (map.getZoom() > 18 || map.getZoom() < 12) {
+            } else if (map.getZoom() > 19 || map.getZoom() < 12) {
                 map.removeLayer(layer_Balaidesa_3);
             }
             if (map.getZoom() <= 18 && map.getZoom() >= 13) {
@@ -975,9 +1032,9 @@
                 map.removeLayer(layer_jalankec_8);
             }
         });
-            if (map.getZoom() <= 18 && map.getZoom() >= 12) {
+            if (map.getZoom() <= 19 && map.getZoom() >= 12) {
                 map.addLayer(layer_Balaidesa_3);
-            } else if (map.getZoom() > 18 || map.getZoom() < 12) {
+            } else if (map.getZoom() > 19 || map.getZoom() < 12) {
                 map.removeLayer(layer_Balaidesa_3);
             }
             if (map.getZoom() <= 18 && map.getZoom() >= 13) {

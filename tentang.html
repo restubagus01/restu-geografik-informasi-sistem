@@ -1,88 +1,38 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tentang</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body {
-      margin: 0;
-      background: #f4f6f8;   /* SAMA dengan index */
-      color: #333;
-      padding-top: 70px;     /* offset navbar */
-    }
-
-    /* ===== NAVBAR PUTIH (SAMA DENGAN INDEX) ===== */
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 70px;
-      background: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 40px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      z-index: 9999;
-    }
-
-    .navbar a {
-      text-decoration: none;
-      color: #003b73;
-      font-weight: 600;
-      font-size: 16px;
-    }
-
-    .navbar a.active {
-      color: #ff9800;
-    }
-
-    /* ===== CONTENT ===== */
-    .content {
-      max-width: 800px;
-      margin: 20px auto;
-      
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .content h2 {
-      margin-top: 0;
-      color: #1f6f8b;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-  <!-- NAVBAR -->
-  <div class="navbar">
-    <a href="index.html">Beranda</a>
-    <a href="kecamatan.html">Peta Kecamatan</a>
-    <a href="desa.html">Peta Desa</a>
-    <a href="tentang.html" class="active">Tentang</a>
-  </div>
+<header class="navbar">
+    <div class="container nav-content">
+        <div class="logo-area">
+            <img src="img/logo-kecamatan.png" alt="Logo Kecamatan">
+            <span>Web GIS Kecamatan</span>
+        </div>
 
-  <!-- CONTENT -->
-  <div class="content">
-    <h2 style="text-align: center;">Tentang Aplikasi</h2>
-    <p>
-    Web GIS Kecamatan merupakan aplikasi berbasis web yang dirancang untuk menyajikan informasi spasial dan non-spasial wilayah kecamatan secara interaktif dan informatif. Aplikasi ini menampilkan peta kecamatan dan peta desa berbasis teknologi Sistem Informasi Geografis (SIG) dengan memanfaatkan Leaflet dan OpenStreetMap sebagai peta dasar. Web GIS ini bertujuan untuk mendukung penyajian informasi geografis, pembelajaran, serta analisis wilayah, sekaligus sebagai sarana pembelajaran akademik dalam memahami konsep SIG, pengolahan data spasial, dan penerapan teknologi pemetaan berbasis web secara sederhana dan mudah diakses.
-    </p>
-    <p><b>Dibuat oleh:</b> Restu Bagus Pambudi</p>
-<p><b>Mata Kuliah:</b> Geographic Information System</p>
+        <nav>
+            <a href="index.html">Beranda</a>
+            <a href="kecamatan.html">Peta Kecamatan</a>
+            <a href="desa.html">Peta Desa</a>
+           <a href="tentang.html" class="active">Tentang</a>
 
+        </nav>
+    </div>
+</header>
 
-  </div>
+<section class="content">
+    <h2>Tentang Aplikasi</h2>
+    <p>Web GIS Kecamatan dibuat untuk menampilkan informasi spasial wilayah kecamatan.</p>
+</section>
+
+<footer>
+    <p>© 2025 Web GIS Kecamatan</p>
+</footer>
 
 </body>
 </html>

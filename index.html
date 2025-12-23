@@ -1,219 +1,185 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Web GIS Kecamatan</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body {
-      margin: 0;
-      background: #f4f6f8;
-      color: #333;
-      padding-top: 70px;
-    }
-
-    /* ===== NAVBAR PUTIH ===== */
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 70px;
-      background: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 40px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      z-index: 9999;
-    }
-
-    .navbar a {
-      text-decoration: none;
-      color: #003b73;
-      font-weight: 600;
-      font-size: 16px;
-    }
-
-    .navbar a:hover {
-      color: #ff9800;
-    }
-
-    /* ===== HERO ===== */
-    .hero {
-      background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-                  url('https://via.placeholder.com/1200x400') center/cover;
-      color: white;
-      padding: 90px 40px;
-      text-align: center;
-    }
-
-    .hero-logo {
-      width: 90px;
-      margin-bottom: 20px;
-    }
-
-    .hero h2 {
-      font-size: 36px;
-      margin-bottom: 10px;
-    }
-
-    .hero p {
-      font-size: 18px;
-      max-width: 700px;
-      margin: auto;
-    }
-
-    .hero button {
-      margin-top: 25px;
-      padding: 12px 25px;
-      font-size: 16px;
-      border: none;
-      background: #f6c90e;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-
-    /* ===== SECTION ===== */
-    section {
-      padding: 50px 40px;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    /* ===== STATISTIK ===== */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-
-    .stat-card {
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .stat-card h3 {
-      margin: 10px 0;
-      font-size: 28px;
-      color: #1f6f8b;
-    }
-
-    /* ===== INFORMASI ===== */
-    .info {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-
-    .info-card {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    /* ===== FOOTER ===== */
-    footer {
-      background: #1f6f8b;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      font-size: 14px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web GIS Kecamatan</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-  <!-- NAVBAR -->
-  <div class="navbar">
-    <a href="index.html">Beranda</a>
-    <a href="kecamatan.html">Peta Kecamatan</a>
-    <a href="desa.html">Peta Desa</a>
-    <a href="tentang.html">Tentang</a>
-  </div>
-
-  <!-- HERO -->
-  <div class="hero">
-    <img src="img/logo-kecamatan.png" alt="Logo Kecamatan" class="hero-logo">
-
-    <h2>Selamat Datang di Web GIS Kecamatan Karanglewas</h2>
-    <p>
-      Menyajikan data spasial dan informasi wilayah kecamatan
-      untuk mendukung perencanaan dan pelayanan publik.
-    </p>
-
-    <a href="kecamatan.html" style="text-decoration:none;">
-      <button>Lihat Peta</button>
-    </a>
-  </div>
-
-  <!-- STATISTIK -->
-  <section>
-    <div class="section-title">
-      <h2>Statistik Wilayah</h2>
-      <p>Data singkat wilayah kecamatan</p>
+<!-- HEADER -->
+<header class="navbar">
+    <div class="container nav-content">
+        <div class="logo-area">
+            <img src="img/logo-kecamatan.png" alt="Logo Kecamatan">
+            <span>Web GIS Kecamatan</span>
+        </div>
+        <nav>
+            <a href="index.html" class="active">Beranda</a>
+            <a href="kecamatan.html">Peta Kecamatan</a>
+            <a href="desa.html">Peta Desa</a>
+            <a href="tentang.html">Tentang</a>
+        </nav>
     </div>
+</header>
 
-    <div class="stats">
-      <div class="stat-card">
-        <p>Jumlah Penduduk</p>
-        <h3>69.197 jiwa</h3>
-      </div>
-      <div class="stat-card">
-        <p>Luas Wilayah</p>
-        <h3>32,48 km²</h3>
-      </div>
-      <div class="stat-card">
-        <p>Jumlah Desa</p>
-        <h3>13</h3>
-      </div>
-      <div class="stat-card">
-        <p>Jumlah RW</p>
-        <h3>81</h3>
-      </div>
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Sistem Informasi Geografis Kecamatan</h1>
+        <p>
+            Menyajikan data spasial dan informasi wilayah kecamatan
+            untuk mendukung perencanaan dan pelayanan publik.
+        </p>
+        <a href="kecamatan.html" class="btn-hero">Lihat Peta</a>
     </div>
-  </section>
+</section>
 
-  <!-- INFORMASI -->
-  <section>
-    <div class="section-title">
-      <h2>Informasi Kecamatan</h2>
+<!-- STATISTIK -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Statistik Wilayah</h2>
+        <p class="section-subtitle">Data singkat wilayah kecamatan</p>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Jumlah Penduduk</h3>
+                <span>69.197 Jiwa</span>
+                <button onclick="openModal('penduduk')">Selengkapnya</button>
+            </div>
+
+            <div class="stat-card">
+                <h3>Luas Wilayah</h3>
+                <span>32,48 km²</span>
+                <button onclick="openModal('wilayah')">Selengkapnya</button>
+            </div>
+
+            <div class="stat-card">
+                <h3>Jumlah Desa</h3>
+                <span>13 Desa</span>
+                <button onclick="openModal('desa')">Selengkapnya</button>
+            </div>
+
+            <div class="stat-card">
+                <h3>Jumlah RW</h3>
+                <span>81 RW</span>
+                <button onclick="openModal('rw')">Selengkapnya</button>
+            </div>
+        </div>
     </div>
+</section>
 
-    <div class="info">
-      <div class="info-card">
-        <h3>Administrasi Wilayah</h3>
-        <p>Kecamatan ini terdiri dari beberapa desa dengan batas wilayah administratif yang jelas.</p>
-      </div>
-      <div class="info-card">
-        <h3>Fasilitas Umum</h3>
-        <p>Terdapat sekolah, puskesmas, kantor desa, dan fasilitas publik lainnya yang dapat dilihat pada peta.</p>
-      </div>
-      <div class="info-card">
-        <h3>Sumber Data</h3>
-        <p>Data bersumber dari BPS, BIG, dan OpenStreetMap yang diperbarui secara berkala.</p>
-      </div>
+<!-- INFORMASI KECAMATAN -->
+<section class="section light">
+    <div class="container">
+        <h2 class="section-title">Informasi Kecamatan</h2>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>Informasi Wilayah</h3>
+                <p>
+                    Kecamatan memiliki kondisi geografis dataran rendah hingga
+                    perbukitan dengan akses jalan utama antar desa.
+                </p>
+            </div>
+
+            <div class="info-card">
+                <h3>Fasilitas Umum</h3>
+                <ul>
+                    <li>Kantor Kecamatan</li>
+                    <li>Puskesmas</li>
+                    <li>Sekolah</li>
+                    <li>Tempat Ibadah</li>
+                    <li>Pasar</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>Sumber Data</h3>
+                <p>
+                    • BPS Kabupaten<br>
+                    • Kantor Kecamatan<br>
+                    • OpenStreetMap<br>
+                    • Pemerintah Daerah
+                </p>
+            </div>
+        </div>
     </div>
-  </section>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2025 Web GIS Kecamatan | Dikembangkan untuk kebutuhan akademik</p>
-  </footer>
+<!-- FOOTER -->
+<footer>
+    <p>© 2025 Web GIS Kecamatan</p>
+</footer>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <table id="modal-table"></table>
+    </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+function openModal(type) {
+    const modal = document.getElementById("modal");
+    const title = document.getElementById("modal-title");
+    const table = document.getElementById("modal-table");
+
+    if (type === "penduduk") {
+        title.innerText = "Data Jumlah Penduduk per Desa";
+        table.innerHTML = `
+            <tr><th>Desa</th><th>Jumlah Penduduk</th></tr>
+            <tr><td>Desa A</td><td>5.432</td></tr>
+            <tr><td>Desa B</td><td>4.987</td></tr>
+            <tr><td>Desa C</td><td>6.210</td></tr>
+            <tr><td>Desa D</td><td>5.890</td></tr>
+        `;
+    }
+
+    if (type === "wilayah") {
+        title.innerText = "Data Luas Wilayah per Desa";
+        table.innerHTML = `
+            <tr><th>Desa</th><th>Luas (km²)</th></tr>
+            <tr><td>Desa A</td><td>2.45</td></tr>
+            <tr><td>Desa B</td><td>3.10</td></tr>
+            <tr><td>Desa C</td><td>2.85</td></tr>
+            <tr><td>Desa D</td><td>2.70</td></tr>
+        `;
+    }
+
+    if (type === "desa") {
+        title.innerText = "Daftar Desa";
+        table.innerHTML = `
+            <tr><th>No</th><th>Nama Desa</th></tr>
+            <tr><td>1</td><td>Desa A</td></tr>
+            <tr><td>2</td><td>Desa B</td></tr>
+            <tr><td>3</td><td>Desa C</td></tr>
+            <tr><td>4</td><td>Desa D</td></tr>
+        `;
+    }
+
+    if (type === "rw") {
+        title.innerText = "Jumlah RW per Desa";
+        table.innerHTML = `
+            <tr><th>Desa</th><th>Jumlah RW</th></tr>
+            <tr><td>Desa A</td><td>6</td></tr>
+            <tr><td>Desa B</td><td>7</td></tr>
+            <tr><td>Desa C</td><td>5</td></tr>
+            <tr><td>Desa D</td><td>6</td></tr>
+        `;
+    }
+
+    modal.style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+}
+</script>
 
 </body>
 </html>

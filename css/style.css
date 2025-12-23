@@ -1,0 +1,290 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background: #ffffff;
+    color: #333;
+}
+
+/* CONTAINER */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* NAVBAR */
+.navbar {
+    background: #1f6f8b;
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.logo {
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+}
+
+nav a.active {
+    border-bottom: 2px solid #fff;
+}
+
+nav a:hover {
+    border-bottom: 2px solid #fff;
+}
+/* LOGO */
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-area img {
+    width: 45px;
+    height: auto;
+}
+
+.logo-area span {
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+/* HERO */
+.hero {
+    background: #9e9e9e;
+    height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+.hero-content {
+    max-width: 700px;
+}
+
+.hero h1 {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.btn-hero {
+    display: inline-block;
+    margin-top: 25px;
+    background: #fbc02d;
+    color: #000;
+    padding: 12px 35px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* SECTION */
+.section {
+    padding: 60px 0;
+}
+
+.section.light {
+    background: #f7f7f7;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* STATISTIK */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    background: #ffffff;
+    padding: 25px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+    color: #1f6f8b;
+    margin-bottom: 10px;
+}
+
+.stat-card span {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* INFO */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.info-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.info-card h3 {
+    color: #1f6f8b;
+    margin-bottom: 10px;
+}
+
+.info-card ul {
+    padding-left: 18px;
+}
+
+/* FOOTER */
+footer {
+    background: #1f6f8b;
+    color: #fff;
+    text-align: center;
+    padding: 15px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 26px;
+    }
+
+    nav {
+        margin-top: 10px;
+    }
+    .logo-area span {
+    font-size: 16px;
+}
+
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* ======================
+   MAP
+====================== */
+#map {
+  width: 100%;
+  height: calc(100vh - 80px);
+}
+.stat-card button {
+    margin-top: 15px;
+    padding: 8px 18px;
+    background: #1f6f8b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.stat-card {
+    background: white;
+    padding: 25px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.stat-card span {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+    display: block;
+}
+
+
+.stat-card button:hover {
+    background: #155b72;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background: white;
+    max-width: 650px;
+    width: 90%;
+    margin: 80px auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.modal th, .modal td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.modal th {
+    background: #1f6f8b;
+    color: white;
+}
