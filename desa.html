@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="css/leaflet-search.css">
         <link rel="stylesheet" href="css/leaflet.photon.css">
          <link rel="stylesheet" href="css/style.css">
+       
         <style>
       html, body {
     width: 100%;
@@ -25,23 +26,41 @@
         <title></title>
     </head>
     <body>
-            <header class="navbar">
+           <header class="navbar">
     <div class="container nav-content">
+
         <div class="logo-area">
-            <img src="img/logo-kecamatan.png" alt="Logo Kecamatan">
+            <img src="img/logo-kecamatan.png" alt="Logo">
             <span>Web GIS Kecamatan</span>
         </div>
 
-        <nav>
-            <a href="index.html" >Beranda</a>
-            <a href="kecamatan.html">Peta Kecamatan</a>
-            <a href="desa.html" class="active">Peta Desa</a>
-            <a href="tentang.html">Tentang</a>
-        </nav>
+    <nav class="navbar">
+  <ul class="menu">
+    <li><a href="index.html">Beranda</a></li>
+    
+    <li><a href="kecamatan.html">Peta Kecamatan</a></li>
+
+    <li class="dropdown">
+  <a href="javascript:void(0)" onclick="toggleDropdown()">Peta Desa ▾</a>
+  <ul class="dropdown-menu" id="menuDesa">
+    <li><a href="Desa/Sunyalangu/sunyalangu.html">Desa Sunyalangu</a></li>
+     <li><a href="desa_b.html">Desa B</a></li>
+     <li><a href="desa_c.html">Desa C</a></li>
+
+  </ul>
+</li>
+
+
+    <li><a href="tentang.html">Tentang</a></li>
+  </ul>
+</nav>
+
     </div>
 </header>
+
         <div id="map">
         </div>
+        
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
@@ -76,6 +95,43 @@
         <script src="data/BatasRW_18.js"></script>
         <script src="data/batasRT_19.js"></script>
         <script src="data/Sawah_20.js"></script>
+        <script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+// tutup dropdown jika klik di luar
+document.addEventListener("click", function(e) {
+    const menu = document.getElementById("menuDesa");
+    const btn = document.querySelector(".dropdown > a");
+
+    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.remove("show");
+    }
+});
+</script>
+
+        <script>
+        function toggleDropdown() {
+            document.getElementById("dropdownDesa")
+                .classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                const dropdown = document.getElementById("dropdownDesa");
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        }
+
+        function pilihDesa(desa) {
+            alert("Menampilkan: " + desa);
+            document.getElementById("dropdownDesa").classList.remove("show");
+        }
+    </script>
+
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
@@ -2131,6 +2187,217 @@
         map.on("layerremove", function(){
             resetLabels([layer_RumahRW_2,layer_RumahRT_3,layer_Klinik_4,layer_Rumahkepaladesa_5,layer_Balaidesa_6,layer_Lapangan_7,layer_Sekolah_8,layer_pointmasjid_9,layer_kuburan_10,layer_TOKO_11,layer_Rumahsayadantetangga_12,layer_Jalanutama_13,layer_jalandesaa_14,layer_sungai_15,layer_relkereta_16,layer_desa_17,layer_BatasRW_18,layer_batasRT_19,layer_Sawah_20]);
         });
-        </script>        
+        </script>      
+        <script>
+function toggleDropdown() {
+    document.getElementById("dropdownPeta")
+        .classList.toggle("show");
+}
+
+/* Tutup dropdown kalau klik di luar */
+window.onclick = function(event) {
+    if (!event.target.matches('.dropbtn')) {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+            dropdowns[i].classList.remove('show');
+        }
+    }
+}
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+<script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+  <script>
+function toggleDropdown() {
+    document.getElementById("menuDesa").classList.toggle("show");
+}
+
+/* tutup jika klik di luar menu */
+document.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("menuDesa");
+    const button = document.querySelector(".dropdown > a");
+
+    if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
     </body>
 </html>
