@@ -119,60 +119,90 @@
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <h2 id="modal-title"></h2>
-        <table id="modal-table"></table>
+
+        <table id="modal-table" class="data-table">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
+
+
 
 <!-- SCRIPT -->
 <script>
 function openModal(type) {
     const modal = document.getElementById("modal");
     const title = document.getElementById("modal-title");
-    const table = document.getElementById("modal-table");
+    const thead = document.querySelector("#modal-table thead");
+    const tbody = document.querySelector("#modal-table tbody");
 
-    if (type === "penduduk") {
-        title.innerText = "Data Jumlah Penduduk per Desa";
-        table.innerHTML = `
-            <tr><th>Desa</th><th>Jumlah Penduduk</th></tr>
-            <tr><td>Desa A</td><td>5.432</td></tr>
-            <tr><td>Desa B</td><td>4.987</td></tr>
-            <tr><td>Desa C</td><td>6.210</td></tr>
-            <tr><td>Desa D</td><td>5.890</td></tr>
-        `;
-    }
+    title.innerText = "";
+    thead.innerHTML = "";
+    tbody.innerHTML = "";
 
-    if (type === "wilayah") {
-        title.innerText = "Data Luas Wilayah per Desa";
-        table.innerHTML = `
-            <tr><th>Desa</th><th>Luas (km²)</th></tr>
-            <tr><td>Desa A</td><td>2.45</td></tr>
-            <tr><td>Desa B</td><td>3.10</td></tr>
-            <tr><td>Desa C</td><td>2.85</td></tr>
-            <tr><td>Desa D</td><td>2.70</td></tr>
-        `;
-    }
+    const data = {
+        penduduk: {
+            title: "Data Jumlah Penduduk per Desa",
+            head: ["No", "Desa", "Jumlah Penduduk"],
+            rows: [
+                ["1", "Desa A", "5.432"],
+                ["2", "Desa B", "4.987"],
+                ["3", "Desa C", "6.210"],
+                ["4", "Desa D", "5.890"]
+            ]
+        },
+        wilayah: {
+            title: "Data Luas Wilayah per Desa",
+            head: ["No", "Desa", "Luas (km²)"],
+            rows: [
+                ["1", "Desa A", "2.45"],
+                ["2", "Desa B", "3.10"],
+                ["3", "Desa C", "2.85"],
+                ["4", "Desa D", "2.70"]
+            ]
+        },
+        desa: {
+            title: "Daftar Desa",
+            head: ["No", "Nama Desa"],
+            rows: [
+                ["1", "Desa A"],
+                ["2", "Desa B"],
+                ["3", "Desa C"],
+                ["4", "Desa D"]
+            ]
+        },
+        rw: {
+            title: "Jumlah RW per Desa",
+            head: ["No", "Desa", "Jumlah RW","Jumlah RT"],
+            rows: [
+                ["1", "Desa A", "6","5"],
+                ["2", "Desa B", "7"],
+                ["3", "Desa C", "5"],
+                ["4", "Desa D", "6"]
+            ]
+        }
+    };
 
-    if (type === "desa") {
-        title.innerText = "Daftar Desa";
-        table.innerHTML = `
-            <tr><th>No</th><th>Nama Desa</th></tr>
-            <tr><td>1</td><td>Desa A</td></tr>
-            <tr><td>2</td><td>Desa B</td></tr>
-            <tr><td>3</td><td>Desa C</td></tr>
-            <tr><td>4</td><td>Desa D</td></tr>
-        `;
-    }
+    const selected = data[type];
+    if (!selected) return;
 
-    if (type === "rw") {
-        title.innerText = "Jumlah RW per Desa";
-        table.innerHTML = `
-            <tr><th>Desa</th><th>Jumlah RW</th></tr>
-            <tr><td>Desa A</td><td>6</td></tr>
-            <tr><td>Desa B</td><td>7</td></tr>
-            <tr><td>Desa C</td><td>5</td></tr>
-            <tr><td>Desa D</td><td>6</td></tr>
-        `;
-    }
+    title.innerText = selected.title;
+
+    // header
+    let headHTML = "<tr>";
+    selected.head.forEach(h => headHTML += `<th>${h}</th>`);
+    headHTML += "</tr>";
+    thead.innerHTML = headHTML;
+
+    // body
+    let bodyHTML = "";
+    selected.rows.forEach(row => {
+        bodyHTML += "<tr>";
+        row.forEach(col => bodyHTML += `<td>${col}</td>`);
+        bodyHTML += "</tr>";
+    });
+    tbody.innerHTML = bodyHTML;
 
     modal.style.display = "block";
 }
@@ -181,6 +211,7 @@ function closeModal() {
     document.getElementById("modal").style.display = "none";
 }
 </script>
+
 
 </body>
 </html>
