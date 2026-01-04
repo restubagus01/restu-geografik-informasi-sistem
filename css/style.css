@@ -1,907 +1,228 @@
 /* ======================
    RESET
 ====================== */
-
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
 }
 
 body {
-    background: #fff;
-    color: #333;
+  background: #fff;
+  color: #333;
 }
 
 /* ======================
    CONTAINER
 ====================== */
 .container {
-    width: 90%;
-    max-width: 1100px;
-    margin: auto;
+  width: 90%;
+  max-width: 1100px;
+  margin: auto;
 }
 
 /* ======================
-   NAVBAR
+   NAVBAR (FIXED & AMAN)
 ====================== */
-
 .navbar {
-    background: #1f6f8b;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #1f6f8b;
+  z-index: 99999;
 }
 
 .nav-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
 }
 
+/* logo */
 .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .logo-area img {
-    width: 45px;
+  width: 45px;
 }
 
 .logo-area span {
-    color: #fff;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-nav {
-    display: flex;
-    align-items: center;
-}
-
-nav a {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 20px;
-    font-weight: 500;
-}
-
-
-
-
-/* ======================
-   HERO
-====================== */
-.hero {
-    background: #9e9e9e;
-    min-height: 380px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #fff;
-    padding: 40px 20px;
-}
-
-.hero-content {
-    max-width: 700px;
-}
-
-.hero h1 {
-    font-size: 36px;
-    margin-bottom: 15px;
-}
-
-.hero p {
-    line-height: 1.6;
-}
-
-.btn-hero {
-    display: inline-block;
-    margin-top: 25px;
-    background: #fbc02d;
-    color: #000;
-    padding: 12px 35px;
-    border-radius: 6px;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-/* ======================
-   SECTION
-====================== */
-.section {
-    padding: 60px 0;
-}
-
-.section.light {
-    background: #f7f7f7;
-}
-
-.section-title {
-    text-align: center;
-    font-size: 26px;
-    margin-bottom: 10px;
-}
-
-.section-subtitle {
-    text-align: center;
-    color: #666;
-    margin-bottom: 40px;
-}
-
-/* ======================
-   STATISTIK
-====================== */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
-
-.stat-card {
-    background: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.stat-card h3 {
-    color: #1f6f8b;
-}
-
-.stat-card span {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 10px 0;
-}
-
-.stat-card button {
-    margin-top: 15px;
-    padding: 8px 18px;
-    background: #1f6f8b;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.stat-card button:hover {
-    background: #155b72;
-}
-
-/* ======================
-   INFO
-====================== */
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.info-card {
-    background: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-.info-card h3 {
-    color: #1f6f8b;
-    margin-bottom: 10px;
-}
-
-.info-card ul {
-    padding-left: 18px;
-}
-
-/* ======================
-   MAP
-====================== */
-#map {
-    width: 100%;
-    height: 100%;
-    min-height: 500px;
-}
-
-
-/* ======================
-   MODAL
-====================== */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 999;
-    padding: 10px;
-}
-
-.modal-content {
-    background: #fff;
-    max-width: 650px;
-    width: 100%;
-    margin: 60px auto;
-    padding: 20px;
-    border-radius: 8px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.close {
-    float: right;
-    font-size: 24px;
-    cursor: pointer;
-}
-.modal table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.modal th, .modal td {
-    border: 1px solid #ddd;
-    padding: 10px;
-}
-
-.modal th {
-    background: #1f6f8b;
-    color: white;
-}
-
-
-/* ======================
-   FOOTER
-====================== */
-footer {
-    background: #1f6f8b;
-    color: #fff;
-    text-align: center;
-    padding: 15px;
-}
-
-/* ======================
-   RESPONSIVE
-====================== */
-@media (max-width: 768px) {
-    .nav-content {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    nav {
-        width: 100%;
-        flex-direction: column;
-        margin-top: 10px;
-    }
-
-    nav a {
-        margin: 8px 0;
-    }
-
-    .dropdown {
-        width: 100%;
-    }
-
-    .dropbtn {
-        width: 100%;
-        text-align: left;
-        margin-left: 0;
-        padding: 8px 0;
-    }
-
-    .dropdown-content {
-        position: relative;
-        top: 0;
-        width: 100%;
-        box-shadow: none;
-    }
-
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .hero h1 {
-        font-size: 26px;
-    }
-
-    .logo-area span {
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 480px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .hero h1 {
-        font-size: 22px;
-    }
-
-    .hero p {
-        font-size: 14px;
-    }
-
-    .section-title {
-        font-size: 22px;
-    }
-}
-/* ======================
-   FIX MENU LIST (UL LI)
-====================== */
-
-nav ul.menu {
-    list-style: none;          /* hilangkan titik */
-    display: flex;             /* bikin horizontal */
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-nav ul.menu > li {
-    position: relative;
-}
-
-nav ul.menu > li > a {
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 18px;
-    display: block;
-    font-weight: 500;
-}
-
-nav ul.menu > li > a:hover {
-    border-bottom: 2px solid #fff;
-}
-
-
-/* ======================
-   FORCE TABLE FIX (ANTI RUSAK)
-====================== */
-
-/* ===== FORCE TABLE FIX ===== */
-#modal-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-#modal-table thead {
-    display: table-header-group;
-}
-
-#modal-table tbody {
-    display: table-row-group;
-}
-
-#modal-table tr {
-    display: table-row;
-}
-
-#modal-table th,
-#modal-table td {
-    display: table-cell;
-    border: 2px solid #1f6f8b;
-    padding: 10px;
-    text-align: left;
-}
-
-#modal-table th {
-    background: #1f6f8b;
-    color: #fff;
-    font-weight: 600;
-}
-/* ======================
-   FIX TABEL MODAL (FINAL & AMAN)
-====================== */
-
-#modal-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background: #fff;
-}
-
-/* pastikan browser pakai mode table asli */
-#modal-table thead {
-    display: table-header-group !important;
-}
-
-#modal-table tbody {
-    display: table-row-group !important;
-}
-
-#modal-table tr {
-    display: table-row !important;
-}
-
-#modal-table th,
-#modal-table td {
-    display: table-cell !important;
-    padding: 12px 14px;
-    border: 2px solid #1f6f8b;
-    font-size: 14px;
-}
-
-/* header tabel */
-#modal-table th {
-    background-color: #1f6f8b;
-    color: #ffffff;
-    font-weight: 600;
-    text-align: center;
-}
-
-/* isi tabel */
-#modal-table td {
-    background: #ffffff;
-}
-
-/* efek hover */
-#modal-table tbody tr:hover {
-    background: #f1f7fb;
-}
-
-@media (max-width: 768px) {
-
-  /* rapikan container */
-  .nav-content {
-    padding: 10px 0;
-  }
-
-  /* menu mobile */
-  .menu {
-    width: 100%;
-    gap: 0;
-  }
-
-  .menu li {
-    width: 100%;
-    text-align: center;
-  }
-
-  .menu li a {
-    display: block;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-  }
-
-  /* HILANGKAN garis hover desktop */
-  .menu li a:hover {
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-  }
-
-  /* dropdown mobile */
-  .dropdown-menu {
-    width: 100%;
-    background: rgba(255,255,255,0.95);
-  }
-
-  .dropdown-menu a {
-    text-align: center;
-    color: #333;
-    border-bottom: 1px solid #ddd;
-  }
-
-  /* PANAH JANGAN DOBEL */
-  .dropdown > a::after {
-    content: " ▾";/* ======================
-   RESET
-====================== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
-}
-
-body {
-    background: #fff;
-    color: #333;
-}
-
-/* ======================
-   CONTAINER
-====================== */
-.container {
-    width: 90%;
-    max-width: 1100px;
-    margin: auto;
-}
-
-/* ======================
-   NAVBAR
-====================== */
-.navbar {
-    background: #1f6f8b;
-    position: relative;
-    z-index: 100;
-}
-
-.nav-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-}
-
-.logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.logo-area img {
-    width: 45px;
-}
-
-.logo-area span {
-    color: #fff;
-    font-size: 20px;
-    font-weight: bold;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 /* ======================
    MENU
 ====================== */
 nav ul.menu {
-    list-style: none;
-    display: flex;
-    align-items: center;
+  list-style: none;
+  display: flex;
+  align-items: center;
 }
 
 nav ul.menu > li {
-    position: relative;
+  position: relative;
 }
 
 nav ul.menu > li > a {
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 18px;
-    display: block;
-    font-weight: 500;
-    
+  display: block;
+  padding: 10px 18px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
 }
 
 nav ul.menu > li > a:hover {
-    border-bottom: 2px solid #fff;
+  background: rgba(255,255,255,0.15);
 }
 
-
 /* ======================
-   HERO
+   DROPDOWN PETA DESA
 ====================== */
-.hero {
-    background: #9e9e9e;
-    min-height: 380px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #fff;
-    padding: 40px 20px;
+.dropdown > a::after {
+  content: " ▾";
+  font-size: 12px;
+}
+
+/* dropdown desktop */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background: #1f6f8b;
+  z-index: 99999;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-menu li {
+  list-style: none;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 16px;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.dropdown-menu li a:hover {
+  background: rgba(255,255,255,0.18);
 }
 
 /* ======================
-   MAP
+   MAP (ANTI NAVBAR HILANG)
 ====================== */
 #map {
-    width: 100%;
-    height: 100%;
-    min-height: 500px;
+  width: 100%;
+  height: calc(100vh - 70px);
+  margin-top: 70px;
 }
 
+.leaflet-container {
+  z-index: 1;
+}
 
 /* ======================
    MODAL
 ====================== */
 .modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 999;
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
 }
 
 .modal-content {
-    background: #fff;
-    max-width: 650px;
-    margin: 60px auto;
-    padding: 20px;
-    border-radius: 8px;
+  background: #fff;
+  max-width: 650px;
+  margin: 60px auto;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 /* ======================
-   TABLE (FINAL FIX)
+   TABLE MODAL
 ====================== */
 #modal-table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
 }
 
 #modal-table th,
 #modal-table td {
-    border: 2px solid #1f6f8b;
-    padding: 12px;
+  border: 2px solid #1f6f8b;
+  padding: 12px;
 }
 
 #modal-table th {
-    background: #1f6f8b;
-    color: #fff;
+  background: #1f6f8b;
+  color: #fff;
+  text-align: center;
 }
 
 /* ======================
    FOOTER
 ====================== */
 footer {
-    background: #1f6f8b;
-    color: #fff;
-    text-align: center;
-    padding: 15px;
+  background: #1f6f8b;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
 }
 
 /* ======================
-   RESPONSIVE
+   RESPONSIVE (MOBILE)
 ====================== */
 @media (max-width: 768px) {
 
-    .nav-content {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .nav-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    nav ul.menu {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    nav ul.menu li {
-        width: 100%;
-        text-align: center;
-    }
-
-    nav ul.menu li a {
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.3);
-    }
-
-    .dropdown-menu {
-        position: relative;
-        width: 100%;
-        box-shadow: none;
-    }
-}
-
-  }}
-/* ==================================================
-   NAVBAR (AMAN – TIDAK GANGGU KONTEN LAIN)
-================================================== */
-
-.navbar {
-    background: #1f6f8b;
-    position: relative;
-    z-index: 100;
-}
-
-.nav-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* menu utama */
-nav ul.menu {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-nav ul.menu > li {
-    width: auto;
-}
-
-/* link menu */
-nav ul.menu > li > a {
-    display: block;
-    padding: 12px 18px;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    text-align: center;
-}
-
-/* hover aman (tidak geser) */
-nav ul.menu > li > a:hover {
-    background: rgba(255,255,255,0.12);
-}
-
-/* ==================================================
-   DROPDOWN PETA DESA (TURUN KE BAWAH – NORMAL FLOW)
-================================================== */
-
-.dropdown {
-    width: auto;
-}
-
-/* tombol peta desa */
-.dropdown > a::after {
-    content: " ▾";
-    font-size: 12px;
-}
-
-/* dropdown list */
-.dropdown-menu {
-    display: none;
-    position: static;       /* KUNCI: ikut alur halaman */
-    background: #1f6f8b;
+  nav ul.menu {
+    flex-direction: column;
     width: 100%;
-}
+  }
 
-/* tampil saat klik */
-.dropdown-menu.show {
-    display: block;
-}
-
-/* item dropdown */
-.dropdown-menu li {
-    list-style: none;
-}
-
-.dropdown-menu li a {
-    display: block;
-    padding: 10px 0;
-    color: #fff;
-    text-decoration: none;
+  nav ul.menu > li {
+    width: 100%;
     text-align: center;
-    border-top: 1px solid rgba(255,255,255,0.3);
-}
+  }
 
-.dropdown-menu li a:hover {
-    background: rgba(255,255,255,0.18);
-}
+  nav ul.menu > li > a {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+  }
 
-/* ==================================================
-   RESPONSIVE (MOBILE AMAN)
-================================================== */
+  /* dropdown mobile: turun ke bawah */
+  .dropdown-menu {
+    position: static;
+    width: 100%;
+  }
 
-@media (max-width: 768px) {
-
-    nav ul.menu {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    nav ul.menu > li {
-        width: 100%;
-    }
-
-    nav ul.menu > li > a {
-        width: 100%;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.3);
-    }
-
-    .dropdown-menu {
-        width: 100%;
-    }
-}
-/* ==================================================
-   DROPDOWN PETA DESA – DEFAULT (DESKTOP / LAPTOP)
-================================================== */
-
-.dropdown {
-    position: relative;
-}
-
-/* tombol */
-.dropdown > a {
-    display: block;
-    padding: 12px 18px;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.dropdown > a::after {
-    content: " ▾";
-    font-size: 12px;
-}
-
-/* dropdown DESKTOP (mengambang) */
-.dropdown {
-    position: relative;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #1f6f8b;
-    z-index: 9999;
-}
-
-
-/* tampil saat klik */
-.dropdown-menu.show {
-    display: block;
-}
-
-.dropdown-menu li {
-    list-style: none;
-}
-
-.dropdown-menu li a {
-    display: block;
-    padding: 10px 16px;
-    color: #fff;
-    text-decoration: none;
-}
-
-.dropdown-menu li a:hover {
-    background: rgba(255,255,255,0.18);
-}
-
-/* ==================================================
-   MOBILE (HP) – TURUN KE BAWAH + TANPA GARIS
-================================================== */
-
-@media (max-width: 768px) {
-
-    /* dropdown ikut alur menu */
-    .dropdown-menu {
-        position: static;      /* KUNCI MOBILE */
-        width: 100%;
-        background: #1f6f8b;
-    }
-
-    /* HILANGKAN GARIS-GARIS */
-    .dropdown-menu li a {
-        border: none !important;
-        padding: 12px 0;
-        text-align: center;
-    }
-}
-/* ===== FIX DROPDOWN HILANG DI DESKTOP ===== */
-.navbar,
-.nav-content,
-nav {
-    overflow: visible !important;
-}
-/* ===== FIX DROPDOWN KETUTUP LEAFLET (FINAL) ===== */
-.navbar {
-    position: relative;
-    z-index: 99999 !important;
-}
-
-.dropdown-menu {
-    z-index: 99999 !important;
-}
-/* ======================
-   CLEAN DROPDOWN MOBILE (NO GARIS)
-   KHUSUS PETA DESA
-====================== */
-
-/* hilangkan garis pada item dropdown */
-.dropdown-menu li a {
-    border-bottom: none !important;
-}
-
-/* jarak rapi tanpa garis */
-.dropdown-menu li {
-    margin: 6px 0;
-}
-
-/* hover tetap enak dilihat */
-.dropdown-menu li a:hover {
-    background: rgba(255,255,255,0.15);
+  .dropdown-menu li a {
+    text-align: center;
+    padding: 12px 0;
+  }
 }
