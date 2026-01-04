@@ -133,6 +133,11 @@ nav ul.menu > li > a:hover {
 #map {
   width: 100%;
   height: calc(100vh - 70px);
+  margin-top: 70px; /* WAJIB karena navbar fixed */
+}
+
+.leaflet-container {
+  z-index: 1;
 }
 
 .leaflet-container {
@@ -211,7 +216,7 @@ footer {
 
   nav ul.menu > li > a {
     padding: 12px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.3);
+    border-bottom: 1px solid rgba(108, 67, 67, 0.3);
   }
 
   /* dropdown mobile: turun ke bawah */
@@ -224,4 +229,10 @@ footer {
     text-align: center;
     padding: 12px 0;
   }
+}
+/* ======================
+   FIX KONTROL LEAFLET KETUTUP NAVBAR
+====================== */
+.leaflet-top {
+  top: 45px !important; /* sedikit di bawah navbar */
 }
