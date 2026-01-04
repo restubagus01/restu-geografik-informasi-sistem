@@ -133,7 +133,6 @@ nav ul.menu > li > a:hover {
 #map {
   width: 100%;
   height: calc(100vh - 70px);
-  margin-top: 70px;
 }
 
 .leaflet-container {
