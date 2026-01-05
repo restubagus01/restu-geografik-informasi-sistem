@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Penduduk</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="logo">Web Peta Kecamatan</div>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="kecamatan.html">Peta Kecamatan</a></li>
+      <li><a href="desa.html">Peta Desa</a></li>
+      <li><a href="informasi.html">informasi</a></li>
+      <li><a href="tentang.html">Tentang</a></li>
+    </ul>
+
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  </nav>
+</header>
+
+<main class="container">
+
+  <h2>Data Penduduk Kecamatan</h2>
+
+  <!-- RINGKASAN -->
+  <section class="penduduk-ringkasan">
+    <div class="card-stat">
+      <h3>Total Penduduk</h3>
+      <p>25.430 Jiwa</p>
+    </div>
+    <div class="card-stat">
+      <h3>Laki-laki</h3>
+      <p>12.800 Jiwa</p>
+    </div>
+    <div class="card-stat">
+      <h3>Perempuan</h3>
+      <p>12.630 Jiwa</p>
+    </div>
+    <div class="card-stat">
+      <h3>Jumlah KK</h3>
+      <p>7.120 KK</p>
+    </div>
+  </section>
+
+  <!-- TABEL -->
+  <section class="penduduk-tabel">
+    <h3>Data Penduduk per Desa</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Desa</th>
+            <th>Laki-laki</th>
+            <th>Perempuan</th>
+            <th>Total</th>
+            <th>Jumlah KK</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Desa A</td>
+            <td>2.100</td>
+            <td>2.050</td>
+            <td>4.150</td>
+            <td>1.200</td>
+          </tr>
+          <tr>
+            <td>Desa B</td>
+            <td>1.980</td>
+            <td>2.020</td>
+            <td>4.000</td>
+            <td>1.100</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="sumber-data">Sumber data: Kantor Kecamatan (2024)</p>
+  </section>
+
+</main>
+
+<script src="js/script.js"></script>
+</body>
+</html>

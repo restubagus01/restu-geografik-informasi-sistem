@@ -1,217 +1,46 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web GIS Kecamatan</title>
-    <link rel="stylesheet" href="css/beranda.css">
- 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beranda | Web Peta Desa</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="navbar">
-    <div class="container nav-content">
-        <div class="logo-area">
-            <img src="img/logo-kecamatan.png" alt="Logo Kecamatan">
-            <span>Web GIS Kecamatan</span>
-        </div>
-        <nav>
-            <a href="index.html" class="active">Beranda</a>
-            <a href="kecamatan.html">Peta Kecamatan</a>
-            <a href="desa.html">Peta Desa</a>
-            <a href="tentang.html">Tentang</a>
-        </nav>
-    </div>
+<!-- NAVBAR -->
+<header>
+  <nav class="navbar">
+    <div class="logo">Web Peta Desa</div>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="kecamatan.html">Peta Kecamatan</a></li>
+      <li><a href="desa.html">Peta Desa</a></li>
+      <li><a href="informasi.html">Informasi</a></li>
+      <li><a href="tentang.html">Tentang</a></li>
+    </ul>
+
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  </nav>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-    <div class="hero-content">
-        <h1>Sistem Informasi Geografis Kecamatan</h1>
-        <p>
-            Menyajikan data spasial dan informasi wilayah kecamatan
-            untuk mendukung perencanaan dan pelayanan publik.
-        </p>
-        <a href="kecamatan.html" class="btn-hero">Lihat Peta</a>
-    </div>
-</section>
 
-<!-- STATISTIK -->
-<section class="section">
-    <div class="container">
-        <h2 class="section-title">Statistik Wilayah</h2>
-        <p class="section-subtitle">Data singkat wilayah kecamatan</p>
+<main class="hero">
+  <div class="overlay"></div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Jumlah Penduduk</h3>
-                <span>69.197 Jiwa</span>
-                <button onclick="openModal('penduduk')">Selengkapnya</button>
-            </div>
+  <div class="hero-content">
+    <img src="img/logo-kabupaten.png" alt="Logo Kabupaten" class="logo-kabupaten">
+    
 
-            <div class="stat-card">
-                <h3>Luas Wilayah</h3>
-                <span>32,48 km²</span>
-                <button onclick="openModal('wilayah')">Selengkapnya</button>
-            </div>
+    <h1>Web Peta Desa</h1>
+    <p>Sistem Informasi Geografis Desa Berbasis Web</p>
 
-            <div class="stat-card">
-                <h3>Jumlah Desa</h3>
-                <span>13 Desa</span>
-                <button onclick="openModal('desa')">Selengkapnya</button>
-            </div>
-
-            <div class="stat-card">
-                <h3>Jumlah RW</h3>
-                <span>81 RW</span>
-                <button onclick="openModal('rw')">Selengkapnya</button>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- INFORMASI KECAMATAN -->
-<section class="section light">
-    <div class="container">
-        <h2 class="section-title">Informasi Kecamatan</h2>
-
-        <div class="info-grid">
-            <div class="info-card">
-                <h3>Informasi Wilayah</h3>
-                <p>
-                    Kecamatan memiliki kondisi geografis dataran rendah hingga
-                    perbukitan dengan akses jalan utama antar desa.
-                </p>
-            </div>
-
-            <div class="info-card">
-                <h3>Fasilitas Umum</h3>
-                <ul>
-                    <li>Kantor Kecamatan</li>
-                    <li>Puskesmas</li>
-                    <li>Sekolah</li>
-                    <li>Tempat Ibadah</li>
-                    <li>Pasar</li>
-                </ul>
-            </div>
-
-            <div class="info-card">
-                <h3>Sumber Data</h3>
-                <p>
-                    • BPS Kabupaten<br>
-                    • Kantor Kecamatan<br>
-                    • OpenStreetMap<br>
-                    • Pemerintah Daerah
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-    <p>© 2025 Web GIS Kecamatan</p>
-</footer>
-
-<!-- MODAL -->
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2 id="modal-title"></h2>
-
-        <table id="modal-table" class="data-table">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</div>
+    <a href="kecamatan.html" class="btn">Lihat Peta</a>
+  </div>
+</main>
 
 
-
-<!-- SCRIPT -->
-<script>
-function openModal(type) {
-    const modal = document.getElementById("modal");
-    const title = document.getElementById("modal-title");
-    const thead = document.querySelector("#modal-table thead");
-    const tbody = document.querySelector("#modal-table tbody");
-
-    title.innerText = "";
-    thead.innerHTML = "";
-    tbody.innerHTML = "";
-
-    const data = {
-        penduduk: {
-            title: "Data Jumlah Penduduk per Desa",
-            head: ["No", "Desa", "Jumlah Penduduk"],
-            rows: [
-                ["1", "Desa A", "5.432"],
-                ["2", "Desa B", "4.987"],
-                ["3", "Desa C", "6.210"],
-                ["4", "Desa D", "5.890"]
-            ]
-        },
-        wilayah: {
-            title: "Data Luas Wilayah per Desa",
-            head: ["No", "Desa", "Luas (km²)"],
-            rows: [
-                ["1", "Desa A", "2.45"],
-                ["2", "Desa B", "3.10"],
-                ["3", "Desa C", "2.85"],
-                ["4", "Desa D", "2.70"]
-            ]
-        },
-        desa: {
-            title: "Daftar Desa",
-            head: ["No", "Nama Desa"],
-            rows: [
-                ["1", "Desa A"],
-                ["2", "Desa B"],
-                ["3", "Desa C"],
-                ["4", "Desa D"]
-            ]
-        },
-        rw: {
-            title: "Jumlah RW per Desa",
-            head: ["No", "Desa", "Jumlah RW","Jumlah RT"],
-            rows: [
-                ["1", "Desa A", "6","5"],
-                ["2", "Desa B", "7"],
-                ["3", "Desa C", "5"],
-                ["4", "Desa D", "6"]
-            ]
-        }
-    };
-
-    const selected = data[type];
-    if (!selected) return;
-
-    title.innerText = selected.title;
-
-    // header
-    let headHTML = "<tr>";
-    selected.head.forEach(h => headHTML += `<th>${h}</th>`);
-    headHTML += "</tr>";
-    thead.innerHTML = headHTML;
-
-    // body
-    let bodyHTML = "";
-    selected.rows.forEach(row => {
-        bodyHTML += "<tr>";
-        row.forEach(col => bodyHTML += `<td>${col}</td>`);
-        bodyHTML += "</tr>";
-    });
-    tbody.innerHTML = bodyHTML;
-
-    modal.style.display = "block";
-}
-
-function closeModal() {
-    document.getElementById("modal").style.display = "none";
-}
-</script>
-
-
+<script src="js/script.js"></script>
 </body>
 </html>

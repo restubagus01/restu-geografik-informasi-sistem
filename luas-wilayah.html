@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luas Wilayah</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="logo">Web Peta Kecamatan</div>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="kecamatan.html">Peta Kecamatan</a></li>
+      <li><a href="desa.html">Peta Desa</a></li>
+      <li><a href="informasi.html">Informasi</a></li>
+      <li><a href="tentang.html">Tentang</a></li>
+    </ul>
+
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  </nav>
+</header>
+
+<main class="container">
+
+  <h2>Luas Wilayah Kecamatan</h2>
+
+  <!-- RINGKASAN -->
+  <section class="luas-ringkasan">
+    <div class="card-stat">
+      <h3>Total Luas Wilayah</h3>
+      <p>45,32 km²</p>
+    </div>
+    <div class="card-stat">
+      <h3>Jumlah Desa</h3>
+      <p>10 Desa</p>
+    </div>
+  </section>
+
+  <!-- TABEL -->
+  <section class="luas-tabel">
+    <h3>Luas Wilayah per Desa</h3>
+
+    <div class="table-wrapper">
+      <table>
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Nama Desa</th>
+      <th>Luas Wilayah (km²)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Desa A</td>
+      <td>5,20</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Desa B</td>
+      <td>4,80</td>
+    </tr>
+  </tbody>
+</table>
+
+    </div>
+
+    <p class="sumber-data">
+      Sumber data: Kantor Kecamatan / BPS Kabupaten (2024)
+    </p>
+  </section>
+
+</main>
+
+<script src="js/script.js"></script>
+</body>
+</html>
