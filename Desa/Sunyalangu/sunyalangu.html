@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="css/L.Control.Locate.min.css">
         <link rel="stylesheet" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
         <link rel="stylesheet" href="css/leaflet.photon.css">
         <style>
         html, body, #map {
@@ -37,6 +38,7 @@
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
         <script src="js/leaflet.photon.js"></script>
+        <script src="js/leaflet-search.js"></script>
         <script src="data/Desa_2.js"></script>
         <script src="data/BatasRwsunyalangu_3.js"></script>
         <script src="data/Polygonhutansunyalangu_4.js"></script>
@@ -66,7 +68,7 @@
         }
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[-7.391042427135867,109.16166607355999],[-7.357071363340164,109.2067929900272]]);
+        }).fitBounds([[-7.3879192802483304,109.13708944176852],[-7.321671402613816,109.2250888253746]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -1408,9 +1410,9 @@
         bounds_group.addLayer(layer_tempatpemakamansunyalangu_12);
         map.addLayer(layer_tempatpemakamansunyalangu_12);
         map.on("zoomend", function(e) {
-            if (map.getZoom() <= 14 && map.getZoom() >= 8) {
+            if (map.getZoom() <= 14 && map.getZoom() >= 12) {
                 map.addLayer(layer_Desa_2);
-            } else if (map.getZoom() > 14 || map.getZoom() < 8) {
+            } else if (map.getZoom() > 14 || map.getZoom() < 12) {
                 map.removeLayer(layer_Desa_2);
             }
             if (map.getZoom() <= 16 && map.getZoom() >= 13) {
@@ -1464,9 +1466,9 @@
                 map.removeLayer(layer_tempatpemakamansunyalangu_12);
             }
         });
-            if (map.getZoom() <= 14 && map.getZoom() >= 8) {
+            if (map.getZoom() <= 14 && map.getZoom() >= 12) {
                 map.addLayer(layer_Desa_2);
-            } else if (map.getZoom() > 14 || map.getZoom() < 8) {
+            } else if (map.getZoom() > 14 || map.getZoom() < 12) {
                 map.removeLayer(layer_Desa_2);
             }
             if (map.getZoom() <= 16 && map.getZoom() >= 13) {
@@ -1520,7 +1522,7 @@
                 map.removeLayer(layer_tempatpemakamansunyalangu_12);
             }
         var overlaysTree = [
-        {label: '<b>Desa Sunyalangu</b>',  selectAllCheckbox: true, children: [
+        {label: '<b>Desa Sunyalangu</b>', collapsed: true, selectAllCheckbox: true, children: [
             {label: '<img src="legend/tempatpemakamansunyalangu_12.png" /> tempat pemakaman sunyalangu', layer: layer_tempatpemakamansunyalangu_12},
             {label: '<img src="legend/pointbalaidesa_11.png" /> point balaidesa', layer: layer_pointbalaidesa_11},
             {label: '<img src="legend/pointsekolahdesasunyalangu_10.png" /> point sekolah desa sunyalangu', layer: layer_pointsekolahdesasunyalangu_10},
@@ -1675,6 +1677,16 @@
               addLabel(layer, i);
               i++;
         });
+        map.addControl(new L.Control.Search({
+            layer: layer_pointsekolahdesasunyalangu_10,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'Nama'}));
+        if (typeof url === 'undefined') {
+            document.getElementsByClassName('search-button')[0].className += ' fa fa-binoculars';
+        } else {
+            document.getElementsByClassName('search-button')[1].className += ' fa fa-binoculars';
+        }
         resetLabels([layer_Desa_2,layer_BatasRwsunyalangu_3,layer_Polygonhutansunyalangu_4,layer_Polygonsawahsunyalangu_5,layer_BatasRTsunyalangu_6,layer_Pointtempatibadahdesasunyalangu_8,layer_PointLapangansunyalangu_9,layer_pointsekolahdesasunyalangu_10,layer_pointbalaidesa_11,layer_tempatpemakamansunyalangu_12]);
         map.on("zoomend", function(){
             resetLabels([layer_Desa_2,layer_BatasRwsunyalangu_3,layer_Polygonhutansunyalangu_4,layer_Polygonsawahsunyalangu_5,layer_BatasRTsunyalangu_6,layer_Pointtempatibadahdesasunyalangu_8,layer_PointLapangansunyalangu_9,layer_pointsekolahdesasunyalangu_10,layer_pointbalaidesa_11,layer_tempatpemakamansunyalangu_12]);
