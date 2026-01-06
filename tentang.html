@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tentang</title>
+  <title>Tentang | Web Peta Desa</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -17,20 +17,50 @@
       <li><a href="kecamatan.html">Peta Kecamatan</a></li>
       <li><a href="desa.html">Peta Desa</a></li>
       <li><a href="informasi.html">Informasi</a></li>
-      <li><a href="tentang.html">Tentang</a></li>
+      <li><a href="tentang.html" class="active">Tentang</a></li>
     </ul>
 
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
   </nav>
 </header>
 
-<main class="container">
-  <h2>Tentang Aplikasi</h2>
-  <p>
-    Web ini dibuat untuk menampilkan peta dan informasi desa
-    menggunakan teknologi Web GIS.
+<main class="tentang-container">
+  <h1>Tentang Aplikasi</h1>
+
+  <p class="tentang-desc">
+    Web Peta Desa merupakan sistem informasi geografis berbasis web yang
+    digunakan untuk menampilkan informasi wilayah desa dan kecamatan
+    secara interaktif. Aplikasi ini bertujuan untuk memudahkan pengguna
+    dalam mengakses peta wilayah, data penduduk, fasilitas umum,
+    serta informasi administratif lainnya.
   </p>
+
+  <div class="tentang-info">
+    <div>
+      <h3>Fungsi Utama</h3>
+      <ul>
+        <li>Menampilkan peta kecamatan dan desa</li>
+        <li>Menyajikan data penduduk</li>
+        <li>Menampilkan fasilitas umum</li>
+        <li>Menyediakan informasi wilayah</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3>Teknologi</h3>
+      <ul>
+        <li>HTML, CSS, JavaScript</li>
+        <li>QGIS & Web GIS</li>
+        <li>Leaflet / OpenStreetMap</li>
+      </ul>
+    </div>
+  </div>
 </main>
+
+<footer class="tentang-footer">
+  <p>Dibuat oleh <strong>Restu bagus pambudi</strong></p>
+  <p>© 2026 Web Peta Desa</p>
+</footer>
 
 <script src="js/script.js"></script>
 </body>

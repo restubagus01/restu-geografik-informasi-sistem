@@ -1,0 +1,1 @@
+var json_Pointlapangankaranggude_10 = {"type":"FeatureCollection","name":"Pointlapangankaranggude_10","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"id":"1","Nama":"Lapangan Merta Jaya Desa Karanggude"},"geometry":{"type":"Point","coordinates":[109.187970013481163,-7.414338710854878]}}]}

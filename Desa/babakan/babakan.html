@@ -1,0 +1,1794 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/leaflet.photon.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet.photon.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/Desa_2.js"></script>
+        <script src="data/BatasRwBabakan_3.js"></script>
+        <script src="data/polygonhutanbabakan_4.js"></script>
+        <script src="data/Polygonsawahbabakan_5.js"></script>
+        <script src="data/BatasRtdesababakan_6.js"></script>
+        <script src="data/JalanBabakan_7.js"></script>
+        <script src="data/Pointbalaidesababakan_8.js"></script>
+        <script src="data/Pointsekolahandesababakan_9.js"></script>
+        <script src="data/pointlapanganbabakan_10.js"></script>
+        <script src="data/Pointtempatibadahbabakan_11.js"></script>
+        <script src="data/PointPemakamandesababakan_12.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString' || e.target.feature.geometry.type === 'MultiLineString') {
+              highlightLayer.setStyle({
+                color: 'rgba(255, 255, 0, 1.00)',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: 'rgba(255, 255, 0, 1.00)',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[-7.420276741655182,109.13295000813348],[-7.339951766118369,109.23965459504197]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        // modify popup if contains media
+        function addClassToPopupIfMedia(content, popup) {
+            var tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            var imgTd = tempDiv.querySelector('td img');
+            if (imgTd) {
+                var src = imgTd.getAttribute('src');
+                if (/\.(jpg|jpeg|png|gif|bmp|webp|avif)$/i.test(src)) {
+                    popup._contentNode.classList.add('media');
+                    setTimeout(function() {
+                        popup.update();
+                    }, 10);
+                } else if (/\.(mp3|wav|ogg|aac)$/i.test(src)) {
+                    var audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = src;
+                    imgTd.parentNode.replaceChild(audio, imgTd);
+                    popup._contentNode.classList.add('media');
+                    setTimeout(function() {
+                        popup.setContent(tempDiv.innerHTML);
+                        popup.update();
+                    }, 10);
+                } else if (/\.(mp4|webm|ogg|mov)$/i.test(src)) {
+                    var video = document.createElement('video');
+                    video.controls = true;
+                    video.src = src;
+                    video.style.width = "400px";
+                    video.style.height = "300px";
+                    video.style.maxHeight = "60vh";
+                    video.style.maxWidth = "60vw";
+                    imgTd.parentNode.replaceChild(video, imgTd);
+                    popup._contentNode.classList.add('media');
+                    // Aggiorna il popup quando il video carica i metadati
+                    video.addEventListener('loadedmetadata', function() {
+                        popup.update();
+                    });
+                    setTimeout(function() {
+                        popup.setContent(tempDiv.innerHTML);
+                        popup.update();
+                    }, 10);
+                } else {
+                    popup._contentNode.classList.remove('media');
+                }
+            } else {
+                popup._contentNode.classList.remove('media');
+            }
+        }
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleSatellite_0');
+        map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
+        var layer_GoogleSatellite_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+        });
+        layer_GoogleSatellite_0;
+        map.addLayer(layer_GoogleSatellite_0);
+        map.createPane('pane_GoogleTerrainHybrid_1');
+        map.getPane('pane_GoogleTerrainHybrid_1').style.zIndex = 401;
+        var layer_GoogleTerrainHybrid_1 = L.tileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleTerrainHybrid_1',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+        });
+        layer_GoogleTerrainHybrid_1;
+        map.addLayer(layer_GoogleTerrainHybrid_1);
+        function pop_Desa_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Jmh Rt'] !== null ? autolinker.link(String(feature.properties['Jmh Rt']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Jmh Rw'] !== null ? autolinker.link(String(feature.properties['Jmh Rw']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Luas'] !== null ? autolinker.link(String(feature.properties['Luas']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Desa_2_0() {
+            return {
+                pane: 'pane_Desa_2',
+                opacity: 1,
+                color: 'rgba(0,0,0,0.694)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Desa_2');
+        map.getPane('pane_Desa_2').style.zIndex = 402;
+        map.getPane('pane_Desa_2').style['mix-blend-mode'] = 'normal';
+        var layer_Desa_2 = new L.geoJson(json_Desa_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Desa_2',
+            layerName: 'layer_Desa_2',
+            pane: 'pane_Desa_2',
+            onEachFeature: pop_Desa_2,
+            style: style_Desa_2_0,
+        });
+        bounds_group.addLayer(layer_Desa_2);
+        map.addLayer(layer_Desa_2);
+        function pop_BatasRwBabakan_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Nama</th>\
+                        <td>' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_BatasRwBabakan_3_0(feature) {
+            switch(String(feature.properties['Nama'])) {
+                case 'RW 10':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(222,111,71,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RW 11':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(95,204,240,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RW 2':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,99,186,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RW 3':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(253,229,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RW 4':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(18,214,165,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RW 5':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(210,93,120,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RW 6':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(16,70,233,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RW 7':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(249,32,58,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RW 8':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(86,47,201,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RW 9':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(214,189,112,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'RW1':
+                    return {
+                pane: 'pane_BatasRwBabakan_3',
+                opacity: 1,
+                color: 'rgba(247,225,55,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(179,21,232,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_BatasRwBabakan_3');
+        map.getPane('pane_BatasRwBabakan_3').style.zIndex = 403;
+        map.getPane('pane_BatasRwBabakan_3').style['mix-blend-mode'] = 'normal';
+        var layer_BatasRwBabakan_3 = new L.geoJson(json_BatasRwBabakan_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_BatasRwBabakan_3',
+            layerName: 'layer_BatasRwBabakan_3',
+            pane: 'pane_BatasRwBabakan_3',
+            onEachFeature: pop_BatasRwBabakan_3,
+            style: style_BatasRwBabakan_3_0,
+        });
+        bounds_group.addLayer(layer_BatasRwBabakan_3);
+        map.addLayer(layer_BatasRwBabakan_3);
+        function pop_polygonhutanbabakan_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Nama</th>\
+                        <td class="visible-with-data" id="Nama">' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_polygonhutanbabakan_4_0() {
+            return {
+                pane: 'pane_polygonhutanbabakan_4',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(23,189,19,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_polygonhutanbabakan_4');
+        map.getPane('pane_polygonhutanbabakan_4').style.zIndex = 404;
+        map.getPane('pane_polygonhutanbabakan_4').style['mix-blend-mode'] = 'normal';
+        var layer_polygonhutanbabakan_4 = new L.geoJson(json_polygonhutanbabakan_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_polygonhutanbabakan_4',
+            layerName: 'layer_polygonhutanbabakan_4',
+            pane: 'pane_polygonhutanbabakan_4',
+            onEachFeature: pop_polygonhutanbabakan_4,
+            style: style_polygonhutanbabakan_4_0,
+        });
+        bounds_group.addLayer(layer_polygonhutanbabakan_4);
+        map.addLayer(layer_polygonhutanbabakan_4);
+        function pop_Polygonsawahbabakan_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Nama</th>\
+                        <td class="visible-with-data" id="Nama">' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Polygonsawahbabakan_5_0() {
+            return {
+                pane: 'pane_Polygonsawahbabakan_5',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(20,247,0,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Polygonsawahbabakan_5');
+        map.getPane('pane_Polygonsawahbabakan_5').style.zIndex = 405;
+        map.getPane('pane_Polygonsawahbabakan_5').style['mix-blend-mode'] = 'normal';
+        var layer_Polygonsawahbabakan_5 = new L.geoJson(json_Polygonsawahbabakan_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Polygonsawahbabakan_5',
+            layerName: 'layer_Polygonsawahbabakan_5',
+            pane: 'pane_Polygonsawahbabakan_5',
+            onEachFeature: pop_Polygonsawahbabakan_5,
+            style: style_Polygonsawahbabakan_5_0,
+        });
+        bounds_group.addLayer(layer_Polygonsawahbabakan_5);
+        map.addLayer(layer_Polygonsawahbabakan_5);
+        function pop_BatasRtdesababakan_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">nama</th>\
+                        <td>' + (feature.properties['nama'] !== null ? autolinker.link(String(feature.properties['nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_BatasRtdesababakan_6_0(feature) {
+            switch(String(feature.properties['nama'])) {
+                case 'Babakan RT 01/02':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(77,240,161,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 01/03':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(205,116,150,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 01/04':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(213,59,144,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 01/05':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(233,198,22,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 01/06':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(150,126,232,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 01/07':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(29,214,97,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 01/08':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(217,155,84,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 01/09':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(223,80,180,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 01/10':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(191,208,97,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 01/11':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(148,215,104,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/01':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(202,120,70,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/02':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(114,213,182,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/03':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(51,66,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/04':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(199,229,129,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/05':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(50,154,239,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/06':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(161,53,211,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/07':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(19,94,215,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/08':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,102,131,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/09':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(153,227,63,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/10':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(222,219,22,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 02/11':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(179,115,236,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 03/01':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(148,218,125,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 03/02':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(73,236,58,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 03/03':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(210,151,22,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 03/04':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(45,231,200,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 03/07':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(237,87,76,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 03/08':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(201,33,230,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 03/09':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(233,121,130,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 03/10':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(59,234,97,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 03/11':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(98,221,106,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 04/04':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(64,234,231,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Babakan RT 05/04':
+                    return {
+                pane: 'pane_BatasRtdesababakan_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(221,79,40,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_BatasRtdesababakan_6');
+        map.getPane('pane_BatasRtdesababakan_6').style.zIndex = 406;
+        map.getPane('pane_BatasRtdesababakan_6').style['mix-blend-mode'] = 'normal';
+        var layer_BatasRtdesababakan_6 = new L.geoJson(json_BatasRtdesababakan_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_BatasRtdesababakan_6',
+            layerName: 'layer_BatasRtdesababakan_6',
+            pane: 'pane_BatasRtdesababakan_6',
+            onEachFeature: pop_BatasRtdesababakan_6,
+            style: style_BatasRtdesababakan_6_0,
+        });
+        bounds_group.addLayer(layer_BatasRtdesababakan_6);
+        map.addLayer(layer_BatasRtdesababakan_6);
+        function pop_JalanBabakan_7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['osm_id'] !== null ? autolinker.link(String(feature.properties['osm_id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['osm_type'] !== null ? autolinker.link(String(feature.properties['osm_type']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['amenity'] !== null ? autolinker.link(String(feature.properties['amenity']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['diameter'] !== null ? autolinker.link(String(feature.properties['diameter']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['building'] !== null ? autolinker.link(String(feature.properties['building']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['public_tra'] !== null ? autolinker.link(String(feature.properties['public_tra']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['railway'] !== null ? autolinker.link(String(feature.properties['railway']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['natural'] !== null ? autolinker.link(String(feature.properties['natural']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['capacity'] !== null ? autolinker.link(String(feature.properties['capacity']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['covered'] !== null ? autolinker.link(String(feature.properties['covered']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['water'] !== null ? autolinker.link(String(feature.properties['water']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['surface'] !== null ? autolinker.link(String(feature.properties['surface']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['bridge'] !== null ? autolinker.link(String(feature.properties['bridge']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['operator'] !== null ? autolinker.link(String(feature.properties['operator']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['waterway'] !== null ? autolinker.link(String(feature.properties['waterway']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['blockage'] !== null ? autolinker.link(String(feature.properties['blockage']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['pump'] !== null ? autolinker.link(String(feature.properties['pump']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['width'] !== null ? autolinker.link(String(feature.properties['width']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['aeroway'] !== null ? autolinker.link(String(feature.properties['aeroway']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['layer'] !== null ? autolinker.link(String(feature.properties['layer']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['parking'] !== null ? autolinker.link(String(feature.properties['parking']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['highway'] !== null ? autolinker.link(String(feature.properties['highway']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tunnel'] !== null ? autolinker.link(String(feature.properties['tunnel']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['man_made'] !== null ? autolinker.link(String(feature.properties['man_made']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['oneway'] !== null ? autolinker.link(String(feature.properties['oneway']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['smoothness'] !== null ? autolinker.link(String(feature.properties['smoothness']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['name'] !== null ? autolinker.link(String(feature.properties['name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['depth'] !== null ? autolinker.link(String(feature.properties['depth']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['barrier'] !== null ? autolinker.link(String(feature.properties['barrier']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['landuse'] !== null ? autolinker.link(String(feature.properties['landuse']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_JalanBabakan_7_0() {
+            return {
+                pane: 'pane_JalanBabakan_7',
+                opacity: 1,
+                color: 'rgba(15,33,14,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_JalanBabakan_7');
+        map.getPane('pane_JalanBabakan_7').style.zIndex = 407;
+        map.getPane('pane_JalanBabakan_7').style['mix-blend-mode'] = 'normal';
+        var layer_JalanBabakan_7 = new L.geoJson(json_JalanBabakan_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_JalanBabakan_7',
+            layerName: 'layer_JalanBabakan_7',
+            pane: 'pane_JalanBabakan_7',
+            onEachFeature: pop_JalanBabakan_7,
+            style: style_JalanBabakan_7_0,
+        });
+        bounds_group.addLayer(layer_JalanBabakan_7);
+        map.addLayer(layer_JalanBabakan_7);
+        function pop_Pointbalaidesababakan_8(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Jam buka'] !== null ? autolinker.link(String(feature.properties['Jam buka']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Alamat'] !== null ? autolinker.link(String(feature.properties['Alamat']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Pointbalaidesababakan_8_0() {
+            return {
+                pane: 'pane_Pointbalaidesababakan_8',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Pointbalaidesababakan_8.svg',
+            iconSize: [12.92, 12.92]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Pointbalaidesababakan_8');
+        map.getPane('pane_Pointbalaidesababakan_8').style.zIndex = 408;
+        map.getPane('pane_Pointbalaidesababakan_8').style['mix-blend-mode'] = 'normal';
+        var layer_Pointbalaidesababakan_8 = new L.geoJson(json_Pointbalaidesababakan_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Pointbalaidesababakan_8',
+            layerName: 'layer_Pointbalaidesababakan_8',
+            pane: 'pane_Pointbalaidesababakan_8',
+            onEachFeature: pop_Pointbalaidesababakan_8,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Pointbalaidesababakan_8_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Pointbalaidesababakan_8);
+        map.addLayer(layer_Pointbalaidesababakan_8);
+        function pop_Pointsekolahandesababakan_9(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Alamat'] !== null ? autolinker.link(String(feature.properties['Alamat']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Jam buka'] !== null ? autolinker.link(String(feature.properties['Jam buka']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Pointsekolahandesababakan_9_0() {
+            return {
+                pane: 'pane_Pointsekolahandesababakan_9',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Pointsekolahandesababakan_9.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Pointsekolahandesababakan_9');
+        map.getPane('pane_Pointsekolahandesababakan_9').style.zIndex = 409;
+        map.getPane('pane_Pointsekolahandesababakan_9').style['mix-blend-mode'] = 'normal';
+        var layer_Pointsekolahandesababakan_9 = new L.geoJson(json_Pointsekolahandesababakan_9, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Pointsekolahandesababakan_9',
+            layerName: 'layer_Pointsekolahandesababakan_9',
+            pane: 'pane_Pointsekolahandesababakan_9',
+            onEachFeature: pop_Pointsekolahandesababakan_9,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Pointsekolahandesababakan_9_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Pointsekolahandesababakan_9);
+        map.addLayer(layer_Pointsekolahandesababakan_9);
+        function pop_pointlapanganbabakan_10(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_pointlapanganbabakan_10_0() {
+            return {
+                pane: 'pane_pointlapanganbabakan_10',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/pointlapanganbabakan_10.svg',
+            iconSize: [11.400000000000002, 11.400000000000002]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_pointlapanganbabakan_10');
+        map.getPane('pane_pointlapanganbabakan_10').style.zIndex = 410;
+        map.getPane('pane_pointlapanganbabakan_10').style['mix-blend-mode'] = 'normal';
+        var layer_pointlapanganbabakan_10 = new L.geoJson(json_pointlapanganbabakan_10, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_pointlapanganbabakan_10',
+            layerName: 'layer_pointlapanganbabakan_10',
+            pane: 'pane_pointlapanganbabakan_10',
+            onEachFeature: pop_pointlapanganbabakan_10,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_pointlapanganbabakan_10_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_pointlapanganbabakan_10);
+        map.addLayer(layer_pointlapanganbabakan_10);
+        function pop_Pointtempatibadahbabakan_11(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Pointtempatibadahbabakan_11_0() {
+            return {
+                pane: 'pane_Pointtempatibadahbabakan_11',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Pointtempatibadahbabakan_11.svg',
+            iconSize: [11.400000000000002, 11.400000000000002]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Pointtempatibadahbabakan_11');
+        map.getPane('pane_Pointtempatibadahbabakan_11').style.zIndex = 411;
+        map.getPane('pane_Pointtempatibadahbabakan_11').style['mix-blend-mode'] = 'normal';
+        var layer_Pointtempatibadahbabakan_11 = new L.geoJson(json_Pointtempatibadahbabakan_11, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Pointtempatibadahbabakan_11',
+            layerName: 'layer_Pointtempatibadahbabakan_11',
+            pane: 'pane_Pointtempatibadahbabakan_11',
+            onEachFeature: pop_Pointtempatibadahbabakan_11,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Pointtempatibadahbabakan_11_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Pointtempatibadahbabakan_11);
+        map.addLayer(layer_Pointtempatibadahbabakan_11);
+        function pop_PointPemakamandesababakan_12(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nama'] !== null ? autolinker.link(String(feature.properties['Nama']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_PointPemakamandesababakan_12_0() {
+            return {
+                pane: 'pane_PointPemakamandesababakan_12',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/PointPemakamandesababakan_12.svg',
+            iconSize: [11.400000000000002, 11.400000000000002]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_PointPemakamandesababakan_12');
+        map.getPane('pane_PointPemakamandesababakan_12').style.zIndex = 412;
+        map.getPane('pane_PointPemakamandesababakan_12').style['mix-blend-mode'] = 'normal';
+        var layer_PointPemakamandesababakan_12 = new L.geoJson(json_PointPemakamandesababakan_12, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_PointPemakamandesababakan_12',
+            layerName: 'layer_PointPemakamandesababakan_12',
+            pane: 'pane_PointPemakamandesababakan_12',
+            onEachFeature: pop_PointPemakamandesababakan_12,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_PointPemakamandesababakan_12_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_PointPemakamandesababakan_12);
+        map.addLayer(layer_PointPemakamandesababakan_12);
+        map.on("zoomend", function(e) {
+            if (map.getZoom() <= 14 && map.getZoom() >= 8) {
+                map.addLayer(layer_Desa_2);
+            } else if (map.getZoom() > 14 || map.getZoom() < 8) {
+                map.removeLayer(layer_Desa_2);
+            }
+            if (map.getZoom() <= 16 && map.getZoom() >= 13) {
+                map.addLayer(layer_BatasRwBabakan_3);
+            } else if (map.getZoom() > 16 || map.getZoom() < 13) {
+                map.removeLayer(layer_BatasRwBabakan_3);
+            }
+            if (map.getZoom() <= 16 && map.getZoom() >= 13) {
+                map.addLayer(layer_polygonhutanbabakan_4);
+            } else if (map.getZoom() > 16 || map.getZoom() < 13) {
+                map.removeLayer(layer_polygonhutanbabakan_4);
+            }
+            if (map.getZoom() <= 16 && map.getZoom() >= 13) {
+                map.addLayer(layer_Polygonsawahbabakan_5);
+            } else if (map.getZoom() > 16 || map.getZoom() < 13) {
+                map.removeLayer(layer_Polygonsawahbabakan_5);
+            }
+            if (map.getZoom() <= 18 && map.getZoom() >= 14) {
+                map.addLayer(layer_BatasRtdesababakan_6);
+            } else if (map.getZoom() > 18 || map.getZoom() < 14) {
+                map.removeLayer(layer_BatasRtdesababakan_6);
+            }
+            if (map.getZoom() <= 17 && map.getZoom() >= 13) {
+                map.addLayer(layer_JalanBabakan_7);
+            } else if (map.getZoom() > 17 || map.getZoom() < 13) {
+                map.removeLayer(layer_JalanBabakan_7);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 13) {
+                map.addLayer(layer_Pointbalaidesababakan_8);
+            } else if (map.getZoom() > 19 || map.getZoom() < 13) {
+                map.removeLayer(layer_Pointbalaidesababakan_8);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 14) {
+                map.addLayer(layer_Pointsekolahandesababakan_9);
+            } else if (map.getZoom() > 19 || map.getZoom() < 14) {
+                map.removeLayer(layer_Pointsekolahandesababakan_9);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 14) {
+                map.addLayer(layer_pointlapanganbabakan_10);
+            } else if (map.getZoom() > 19 || map.getZoom() < 14) {
+                map.removeLayer(layer_pointlapanganbabakan_10);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 14) {
+                map.addLayer(layer_Pointtempatibadahbabakan_11);
+            } else if (map.getZoom() > 19 || map.getZoom() < 14) {
+                map.removeLayer(layer_Pointtempatibadahbabakan_11);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 14) {
+                map.addLayer(layer_PointPemakamandesababakan_12);
+            } else if (map.getZoom() > 19 || map.getZoom() < 14) {
+                map.removeLayer(layer_PointPemakamandesababakan_12);
+            }
+        });
+            if (map.getZoom() <= 14 && map.getZoom() >= 8) {
+                map.addLayer(layer_Desa_2);
+            } else if (map.getZoom() > 14 || map.getZoom() < 8) {
+                map.removeLayer(layer_Desa_2);
+            }
+            if (map.getZoom() <= 16 && map.getZoom() >= 13) {
+                map.addLayer(layer_BatasRwBabakan_3);
+            } else if (map.getZoom() > 16 || map.getZoom() < 13) {
+                map.removeLayer(layer_BatasRwBabakan_3);
+            }
+            if (map.getZoom() <= 16 && map.getZoom() >= 13) {
+                map.addLayer(layer_polygonhutanbabakan_4);
+            } else if (map.getZoom() > 16 || map.getZoom() < 13) {
+                map.removeLayer(layer_polygonhutanbabakan_4);
+            }
+            if (map.getZoom() <= 16 && map.getZoom() >= 13) {
+                map.addLayer(layer_Polygonsawahbabakan_5);
+            } else if (map.getZoom() > 16 || map.getZoom() < 13) {
+                map.removeLayer(layer_Polygonsawahbabakan_5);
+            }
+            if (map.getZoom() <= 18 && map.getZoom() >= 14) {
+                map.addLayer(layer_BatasRtdesababakan_6);
+            } else if (map.getZoom() > 18 || map.getZoom() < 14) {
+                map.removeLayer(layer_BatasRtdesababakan_6);
+            }
+            if (map.getZoom() <= 17 && map.getZoom() >= 13) {
+                map.addLayer(layer_JalanBabakan_7);
+            } else if (map.getZoom() > 17 || map.getZoom() < 13) {
+                map.removeLayer(layer_JalanBabakan_7);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 13) {
+                map.addLayer(layer_Pointbalaidesababakan_8);
+            } else if (map.getZoom() > 19 || map.getZoom() < 13) {
+                map.removeLayer(layer_Pointbalaidesababakan_8);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 14) {
+                map.addLayer(layer_Pointsekolahandesababakan_9);
+            } else if (map.getZoom() > 19 || map.getZoom() < 14) {
+                map.removeLayer(layer_Pointsekolahandesababakan_9);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 14) {
+                map.addLayer(layer_pointlapanganbabakan_10);
+            } else if (map.getZoom() > 19 || map.getZoom() < 14) {
+                map.removeLayer(layer_pointlapanganbabakan_10);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 14) {
+                map.addLayer(layer_Pointtempatibadahbabakan_11);
+            } else if (map.getZoom() > 19 || map.getZoom() < 14) {
+                map.removeLayer(layer_Pointtempatibadahbabakan_11);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 14) {
+                map.addLayer(layer_PointPemakamandesababakan_12);
+            } else if (map.getZoom() > 19 || map.getZoom() < 14) {
+                map.removeLayer(layer_PointPemakamandesababakan_12);
+            }
+        var overlaysTree = [
+        {label: '<b>Desa Babakan</b>',  selectAllCheckbox: true, children: [
+            {label: '<img src="legend/PointPemakamandesababakan_12.png" /> Point Pemakaman desa babakan', layer: layer_PointPemakamandesababakan_12},
+            {label: '<img src="legend/Pointtempatibadahbabakan_11.png" /> Point tempat ibadah babakan', layer: layer_Pointtempatibadahbabakan_11},
+            {label: '<img src="legend/pointlapanganbabakan_10.png" /> point lapangan babakan', layer: layer_pointlapanganbabakan_10},
+            {label: '<img src="legend/Pointsekolahandesababakan_9.png" /> Point sekolahan desa babakan', layer: layer_Pointsekolahandesababakan_9},
+            {label: '<img src="legend/Pointbalaidesababakan_8.png" /> Point balaidesa babakan', layer: layer_Pointbalaidesababakan_8},
+            {label: '<img src="legend/JalanBabakan_7.png" /> Jalan Babakan', layer: layer_JalanBabakan_7},
+            {label: 'Batas Rt desa babakan<br /><table><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT01020.png" /></td><td>Babakan RT 01/02</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT01031.png" /></td><td>Babakan RT 01/03</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT01042.png" /></td><td>Babakan RT 01/04</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT01053.png" /></td><td>Babakan RT 01/05</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT01064.png" /></td><td>Babakan RT 01/06</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT01075.png" /></td><td>Babakan RT 01/07</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT01086.png" /></td><td>Babakan RT 01/08</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT01097.png" /></td><td>Babakan RT 01/09</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT01108.png" /></td><td>Babakan RT 01/10</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT01119.png" /></td><td>Babakan RT 01/11</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT020110.png" /></td><td>Babakan RT 02/01</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT020211.png" /></td><td>Babakan RT 02/02</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT020312.png" /></td><td>Babakan RT 02/03</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT020413.png" /></td><td>Babakan RT 02/04</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT020514.png" /></td><td>Babakan RT 02/05</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT020615.png" /></td><td>Babakan RT 02/06</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT020716.png" /></td><td>Babakan RT 02/07</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT020817.png" /></td><td>Babakan RT 02/08</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT020918.png" /></td><td>Babakan RT 02/09</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT021019.png" /></td><td>Babakan RT 02/10</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT021120.png" /></td><td>Babakan RT 02/11</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT030121.png" /></td><td>Babakan RT 03/01</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT030222.png" /></td><td>Babakan RT 03/02</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT030323.png" /></td><td>Babakan RT 03/03</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT030424.png" /></td><td>Babakan RT 03/04</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT030725.png" /></td><td>Babakan RT 03/07</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT030826.png" /></td><td>Babakan RT 03/08</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT030927.png" /></td><td>Babakan RT 03/09</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT031028.png" /></td><td>Babakan RT 03/10</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT031129.png" /></td><td>Babakan RT 03/11</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT040430.png" /></td><td>Babakan RT 04/04</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRtdesababakan_6_BabakanRT050431.png" /></td><td>Babakan RT 05/04</td></tr></table>', layer: layer_BatasRtdesababakan_6},
+            {label: '<img src="legend/Polygonsawahbabakan_5.png" /> Polygon sawah babakan', layer: layer_Polygonsawahbabakan_5},
+            {label: '<img src="legend/polygonhutanbabakan_4.png" /> polygon hutan babakan', layer: layer_polygonhutanbabakan_4},
+            {label: 'Batas Rw Babakan<br /><table><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW100.png" /></td><td>RW 10</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW111.png" /></td><td>RW 11</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW22.png" /></td><td>RW 2</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW33.png" /></td><td>RW 3</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW44.png" /></td><td>RW 4</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW55.png" /></td><td>RW 5</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW66.png" /></td><td>RW 6</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW77.png" /></td><td>RW 7</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW88.png" /></td><td>RW 8</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW99.png" /></td><td>RW 9</td></tr><tr><td style="text-align: center;"><img src="legend/BatasRwBabakan_3_RW110.png" /></td><td>RW1</td></tr></table>', layer: layer_BatasRwBabakan_3},]},
+            {label: '<img src="legend/Desa_2.png" /> Desa', layer: layer_Desa_2},
+            {label: "Google Terrain Hybrid", layer: layer_GoogleTerrainHybrid_1},
+            {label: "Google Satellite", layer: layer_GoogleSatellite_0},]
+        var lay = L.control.layers.tree(null, overlaysTree,{
+            //namedToggle: true,
+            //selectorBack: false,
+            //closedSymbol: '&#8862; &#x1f5c0;',
+            //openedSymbol: '&#8863; &#x1f5c1;',
+            //collapseAll: 'Collapse all',
+            //expandAll: 'Expand all',
+            collapsed: true,
+        });
+        lay.addTo(map);
+        setBounds();
+        var i = 0;
+        layer_Desa_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nama'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Desa_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_BatasRwBabakan_3.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nama'] !== null?String('<div style="color: #323232; font-size: 4pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_BatasRwBabakan_3'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_polygonhutanbabakan_4.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nama'] !== null?String('<div style="color: #323232; font-size: 4pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_polygonhutanbabakan_4'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Polygonsawahbabakan_5.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nama'] !== null?String('<div style="color: #323232; font-size: 4pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Polygonsawahbabakan_5'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_BatasRtdesababakan_6.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['nama'] !== null?String('<div style="color: #323232; font-size: 4pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['nama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_BatasRtdesababakan_6'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Pointbalaidesababakan_8.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nama'] !== null?String('<div style="color: #323232; font-size: 4pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Pointbalaidesababakan_8'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Pointsekolahandesababakan_9.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nama'] !== null?String('<div style="color: #323232; font-size: 4pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Pointsekolahandesababakan_9'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_pointlapanganbabakan_10.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nama'] !== null?String('<div style="color: #323232; font-size: 4pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_pointlapanganbabakan_10'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Pointtempatibadahbabakan_11.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nama'] !== null?String('<div style="color: #323232; font-size: 4pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Pointtempatibadahbabakan_11'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_PointPemakamandesababakan_12.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nama'] !== null?String('<div style="color: #323232; font-size: 4pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_PointPemakamandesababakan_12'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        map.addControl(new L.Control.Search({
+            layer: layer_Pointtempatibadahbabakan_11,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'Nama'}));
+        if (typeof url === 'undefined') {
+            document.getElementsByClassName('search-button')[0].className += ' fa fa-binoculars';
+        } else {
+            document.getElementsByClassName('search-button')[1].className += ' fa fa-binoculars';
+        }
+        resetLabels([layer_Desa_2,layer_BatasRwBabakan_3,layer_polygonhutanbabakan_4,layer_Polygonsawahbabakan_5,layer_BatasRtdesababakan_6,layer_Pointbalaidesababakan_8,layer_Pointsekolahandesababakan_9,layer_pointlapanganbabakan_10,layer_Pointtempatibadahbabakan_11,layer_PointPemakamandesababakan_12]);
+        map.on("zoomend", function(){
+            resetLabels([layer_Desa_2,layer_BatasRwBabakan_3,layer_polygonhutanbabakan_4,layer_Polygonsawahbabakan_5,layer_BatasRtdesababakan_6,layer_Pointbalaidesababakan_8,layer_Pointsekolahandesababakan_9,layer_pointlapanganbabakan_10,layer_Pointtempatibadahbabakan_11,layer_PointPemakamandesababakan_12]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_Desa_2,layer_BatasRwBabakan_3,layer_polygonhutanbabakan_4,layer_Polygonsawahbabakan_5,layer_BatasRtdesababakan_6,layer_Pointbalaidesababakan_8,layer_Pointsekolahandesababakan_9,layer_pointlapanganbabakan_10,layer_Pointtempatibadahbabakan_11,layer_PointPemakamandesababakan_12]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_Desa_2,layer_BatasRwBabakan_3,layer_polygonhutanbabakan_4,layer_Polygonsawahbabakan_5,layer_BatasRtdesababakan_6,layer_Pointbalaidesababakan_8,layer_Pointsekolahandesababakan_9,layer_pointlapanganbabakan_10,layer_Pointtempatibadahbabakan_11,layer_PointPemakamandesababakan_12]);
+        });
+        </script>        
+    </body>
+</html>

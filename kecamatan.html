@@ -8,34 +8,28 @@
 </head>
 <body>
 
-<header>
-  <nav class="navbar">
-    <div class="logo">Web Peta Desa</div>
+<header class="navbar">
+  <div class="logo">Web Peta Kecamatan</div>
 
-    <ul class="nav-links" id="navLinks">
-      <li><a href="index.html">Beranda</a></li>
-      <li><a href="kecamatan.html">Peta Kecamatan</a></li>
-      <li><a href="desa.html">Peta Desa</a></li>
-      <li><a href="informasi.html">Informasi</a></li>
-      <li><a href="tentang.html">Tentang</a></li>
-    </ul>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="kecamatan.html" class="active">Peta Kecamatan</a></li>
+    <li><a href="desa.html">Peta Desa</a></li>
+    <li><a href="informasi.html">Informasi</a></li>
+    <li><a href="tentang.html">Tentang</a></li>
+  </ul>
 
-    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-  </nav>
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
 </header>
 
+<!-- overlay judul -->
 
-<main class="container">
- <h2>Peta Kecamatan</h2>
+</div>
 
-<a href="index.html" class="btn-back">← Kembali ke Beranda</a>
-
-
-  <div class="map-container">
-    <!-- nanti isi peta QGIS / Leaflet -->
-    <iframe src="Desa/Kecamatan/index.html"></iframe>
-  </div>
-</main>
+<!-- peta fullscreen -->
+<div class="map-container">
+  <iframe src="Desa/karanglewas/karanglewas.html"></iframe>
+</div>
 
 <script src="js/script.js"></script>
 </body>
